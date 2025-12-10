@@ -1,30 +1,26 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../contextData/CartContext.jsx";
 import { toast } from "react-toastify";
 import API_URL from "../api/api.js";
-const Home = () => {
+const AdminAllProduct= () => {
   const { userData } = useCart();
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  const { setCartItems, fetchCartItems } = useCart();
   const [loading, setloading] = useState(false);
 
   const fetchProducts = async () => {
     try {
       const res = await API_URL.get("/products/");
-      const data = res.data;
-      console.log(res.data);
-      setData(data);
+      console.log(userData?.user.id)
+      setData(res.data);
     } catch (error) {
       console.log(error);
     }
   };
   useEffect(() => {
     fetchProducts();
-    fetchCartItems()
-
   }, []);
 
   const Cart = async (productId,) => {
@@ -51,7 +47,7 @@ const Home = () => {
 
 
   const updateProd = (ele) => {
-    navigate("/updateProduct", { state: ele });
+    navigate("/admin/adminUpdateProduct", { state: ele });
   };
   useEffect(() => {
     setloading(true);
@@ -79,22 +75,7 @@ const Home = () => {
                   alt={ele.name}
                   className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
                 />
-                <button
-                  onClick={async (e) => {
-                    e.stopPropagation();
-                    try {
-                      const updatedCartItems = await Cart(ele._id);
-                      setCartItems(updatedCartItems);
-                      toast.success("Added to cart");
-                    } catch (err) {
-                      console.error("Failed to add to cart:", err);
-                    }
-                  }}
-                  className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors focus:outline-none"
-                  title="Add to Cart"
-                >
-                  <FaShoppingCart size={20} />
-                </button>
+                
               </div>
 
               <div className="p-4 flex-grow flex flex-col">
@@ -114,14 +95,7 @@ const Home = () => {
                   </div>
                 </div>
 
-                {userData?.user?.role !== "user" && (
-                  <button
-                    className="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-lg transition-colors text-sm font-medium"
-                    onClick={() => updateProd(ele)}
-                  >
-                    Update Product
-                  </button>
-                )}
+                
               </div>
             </div>
           ))}
@@ -132,4 +106,4 @@ const Home = () => {
   );
 };
 
-export default Home;
+export default AdminAllProduct;

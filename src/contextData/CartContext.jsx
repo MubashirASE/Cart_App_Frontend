@@ -1,14 +1,44 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import API_URL from "../api/api.js";
+import { toast } from "react-toastify";
 
 const CartContext = createContext();
+const userJson = localStorage.getItem("user")
+const initialStates = {
+  token: localStorage.getItem("token") ?? null,
+  user: userJson ? JSON.parse(userJson) : null
+}
+
+
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cart, setCart] = useState();
+  const [userData, setUserData] = useState(initialStates);
+
+  const setUser = (token, user) => {
+    console.log(token, user)
+    setUserData({
+      token,
+      user
+    })
+    localStorage.setItem("token", token)
+    localStorage.setItem("user", JSON.stringify(user))
+  }
+
+  const fetchData = () => {
+    const token = localStorage.getItem("token");
+    const user = JSON.parse(localStorage.getItem("user"));
+
+    setUserData({
+      token: token,
+      user: user
+    });
+  };
+
+
   const fetchCartItems = async () => {
     try {
       const res = await API_URL.get("/cart/");
-      // Safely handle if cart is null/undefined
       const cartData = res.data.cart;
       setCart(cartData);
 
@@ -19,29 +49,32 @@ export const CartProvider = ({ children }) => {
       }
     } catch (error) {
       console.error("Error fetching cart items:", error);
-      // If error (e.g. 404), clear cart
       setCartItems([]);
     }
   };
 
+useEffect(() => {
+  if (userData?.token) {
+    fetchCartItems();
+  } else {
+    setCartItems([]); 
+  }
+}, [userData?.token]);
+
   useEffect(() => {
     fetchCartItems();
+    fetchData()
   }, []);
 
   const addToCart = (product) => {
     console.log("Adding to cart:", product);
-
-
-    // Otherwise, add single item logic (if needed, but current Home.jsx passes full list)
     setCartItems((prevCartItems) => {
       const existingItem = prevCartItems.find(
         (item) => item.product._id === product.product._id
       );
-
       if (!existingItem) {
         return [...prevCartItems, product];
       }
-
       if (existingItem.quantity < existingItem.product.quantity) {
         return prevCartItems.map((item) =>
           item.product._id === product.product._id
@@ -49,12 +82,9 @@ export const CartProvider = ({ children }) => {
             : item
         );
       }
-
       return prevCartItems;
     });
   };
-
-
   return (
     <CartContext.Provider
       value={{
@@ -63,6 +93,8 @@ export const CartProvider = ({ children }) => {
         addToCart,
         setCartItems,
         fetchCartItems,
+        userData,
+        setUser
       }}
     >
       {children}

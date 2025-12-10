@@ -3,8 +3,21 @@ import "./App.css";
 import AppLayout from "./layout/mainlayout.jsx";
 import Home from "./pages/Home.jsx";
 import CartList from "./pages/CartList.jsx";
-import CreateProduct from "./pages/CreateProduct.jsx";
-import UpdateProduct from "./pages/UpdateProduct.jsx";
+import SignUp from "./pages/SignUp.jsx";
+import Login from "./pages/Login.jsx";
+import AdminDetailPage from "./pages/adminDashboard.jsx";
+import AdminHome from "./pages/adminHome.jsx";
+import AdminUserData from "./pages/adminUser.jsx";
+import AdminDetails from "./pages/adminDetails.jsx";
+import UsePaymentCart from "./pages/UsePaymentCart.jsx";
+import ProtectedRoute from "./pages/protectedRoutes.jsx";
+import VerifySuccess from "./pages/VerfiyPage.jsx";
+import VerifyPage from "./pages/VerfiyPage.jsx";
+import AdminAddData from "./pages/adminAddData.jsx";
+import AdminAllProduct from "./pages/adminAllProduct.jsx";
+import AdminUpdateProduct from "./pages/adminUpdateProduct.jsx";
+import AdminCreateProduct from "./pages/adminCreateProduct.jsx";
+import AdminMyProduct from "./pages/adminMyProduct.jsx";
 
 function App() {
 
@@ -16,20 +29,68 @@ function App() {
         {
           path: "/",            
           element: <Home />
+        }
+        ,{
+          path: "verify",
+          element: <VerifyPage/>
         },
         {
           path: "cart",       
-          element: <CartList/>
+          element:(<ProtectedRoute> <CartList/></ProtectedRoute>)
         },{
-          path: "createProduct",      
-          element: <CreateProduct/>
+          path: "usePaymentCart",      
+          element:(<ProtectedRoute> <UsePaymentCart/></ProtectedRoute>)
 
         },{
-          path: "updateProduct",      
-          element: <UpdateProduct/>
+          path: "signup",
+          element: <SignUp />,
+        },
+        {
+          path: "login",
+          element: <Login />,
+        }
+        ,{
+          path: "admin",
+          element:(<ProtectedRoute> <AdminHome/></ProtectedRoute>),
+            children: [
+            {
+              path: "",            
+              element: <AdminDetailPage/>
+            },{
+              path: "adminUser",            
+              element: <AdminUserData/>
+
+            },{
+              path: "adminDetails",            
+              element: <AdminDetails/>
+
+            },{
+              path: "adminCreated",            
+              element: <AdminAddData/>
+
+            },{
+              path: "adminAllProduct",            
+              element: <AdminAllProduct/>
+
+            },{
+              path: "adminUpdateProduct",            
+              element: <AdminUpdateProduct/>
+
+            },{
+              path: "adminCreateProduct",            
+              element: <AdminCreateProduct/>
+
+            },{
+              path: "adminMyProduct",            
+              element: <AdminMyProduct/>
+
+            }       
+          ]
         }
       ]
-    }
+    },
+    
+        
   ]);
 
   return <RouterProvider router={appRouter} />;
