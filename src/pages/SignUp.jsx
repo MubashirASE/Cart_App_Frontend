@@ -153,10 +153,10 @@ const SignUp = () => {
               )}
             </button>
             <p className="mt-2 text-center text-sm text-gray-600">
-            <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
-              Login in to your existing account
-            </Link>
-          </p>
+              <Link to="/login" className="font-medium text-blue-600 hover:text-blue-500">
+                Login in to your existing account
+              </Link>
+            </p>
           </div>
         </div>
       </div>

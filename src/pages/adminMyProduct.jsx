@@ -3,18 +3,27 @@ import { useNavigate } from "react-router-dom";
 import { useCart } from "../contextData/CartContext.jsx";
 import { toast } from "react-toastify";
 import API_URL from "../api/api.js";
+import Modal from "../components/popup.jsx";
+import AdminCreateProduct from "./adminCreateProduct.jsx";
+import AdminUpdateProduct from "./adminUpdateProduct.jsx";
+import { FiEdit } from "react-icons/fi";
+import { BiPencil } from "react-icons/bi";
+import { BsTrash2 } from "react-icons/bs";
 
 const AdminMyProduct = () => {
   const { userData } = useCart();
   const [data, setData] = useState([]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [openModal, setOpenModal] = useState(false); 
 
   const fetchProducts = async () => {
     setLoading(true);
     try {
       const res = await API_URL.get("/products/");
-      const filtered = res.data.filter(e => e.user._id === userData?.user?.id);
+      const filtered = res.data.filter(
+        (e) => e.user._id === userData?.user?.id
+      );
       setData(filtered);
     } catch (error) {
       console.log(error);
@@ -24,38 +33,51 @@ const AdminMyProduct = () => {
   };
 
   useEffect(() => {
+  if (userData?.user?.id) {
     fetchProducts();
-  }, []);
+  }
+}, [userData]);
+
 
   const updateProd = (ele) => {
     navigate("/admin/adminUpdateProduct", { state: ele });
   };
-
+  const deleteProd = async (ele) => {
+    console.log(ele);
+    const res = await API_URL.delete(`/products/delete/${ele._id}`);
+    toast.success(res.data.message);
+    fetchProducts()
+  };
   return (
     <div className="p-8 space-y-6">
-      <div className="flex justify-between">       
+      <div className="flex justify-between">
         <h1 className="text-2xl font-bold text-gray-800 ">My Products</h1>
-         <button
-                        onClick={() => updateProd()}
-                        className="inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm focus:outline-none "
-                      >
-                        Add Product
-                      </button>
-</div>
-     
+        <button
+          onClick={() => setOpenModal(true)}
+          className="inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg shadow-sm focus:outline-none "
+        >
+          Add Product
+        </button>
+        <Modal open={openModal} onClose={() => setOpenModal(false)}>
+          <AdminCreateProduct closeModal={() => setOpenModal(false)}     onProductAdded={() => fetchProducts()} 
+ />
+        </Modal>
+      </div>
+
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <div className="spinner"></div>
         </div>
       ) : data.length === 0 ? (
         <div className="flex justify-center items-center h-64">
-          <h2 className="text-gray-500 text-xl font-semibold">No Items Found</h2>
+          <h2 className="text-gray-500 text-xl font-semibold">
+            No Items Found
+          </h2>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full divide-y divide-gray-200">
-
               <thead className="bg-gray-50">
                 <tr>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -82,7 +104,6 @@ const AdminMyProduct = () => {
               <tbody className="bg-white divide-y divide-gray-200">
                 {data?.map((ele) => (
                   <tr key={ele._id} className="hover:bg-gray-50">
-                    
                     <td className="px-6 py-4 whitespace-nowrap">
                       <img
                         src={`http://localhost:3001${ele.image}`}
@@ -112,22 +133,21 @@ const AdminMyProduct = () => {
                     <td className="px-6 py-4 text-center whitespace-nowrap space-x-2">
                       <button
                         onClick={() => updateProd(ele)}
-                        className="inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-green-600 hover:bg-green-700 rounded-lg shadow-sm focus:outline-none"
+                        className="inline-flex items-center px-2 py-2 text-sm font-medium text-blue-600 bg-blue-100 hover:bg-blue-200 rounded-lg shadow-sm focus:outline-none"
                       >
-                        Update
+                        <BiPencil />
                       </button>
+
                       <button
-                        onClick={() => updateProd(ele)}
-                        className="inline-flex items-center px-2 py-2 text-sm font-medium text-white bg-red-600 hover:bg-red-700 rounded-lg shadow-sm focus:outline-none"
+                        onClick={() => deleteProd(ele)}
+                        className="inline-flex items-center px-2 py-2 text-sm font-medium text-red-500 bg-red-100 hover:bg-red-200 rounded-lg shadow-sm focus:outline-none"
                       >
-                        Delete 
+                        <BsTrash2 />
                       </button>
                     </td>
-
                   </tr>
                 ))}
               </tbody>
-
             </table>
           </div>
         </div>

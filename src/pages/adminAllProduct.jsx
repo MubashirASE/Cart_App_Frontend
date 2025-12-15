@@ -69,14 +69,14 @@ const AdminAllProduct= () => {
               key={ele._id}
               className="bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col"
             >
-              <div className="relative group">
-                <img
-                  src={`http://localhost:3001${ele.image}`}
-                  alt={ele.name}
-                  className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
-                />
-                
-              </div>
+              <div className="relative group w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-3">
+  <img
+    src={`http://localhost:3001${ele.image}`}
+    alt={ele.name}
+    className="w-full h-full object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
+  />
+</div>
+
 
               <div className="p-4 flex-grow flex flex-col">
                 <h3 className="font-semibold text-lg text-gray-800 truncate mb-1" title={ele.name}>

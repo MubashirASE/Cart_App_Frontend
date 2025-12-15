@@ -18,6 +18,7 @@ import AdminAllProduct from "./pages/adminAllProduct.jsx";
 import AdminUpdateProduct from "./pages/adminUpdateProduct.jsx";
 import AdminCreateProduct from "./pages/adminCreateProduct.jsx";
 import AdminMyProduct from "./pages/adminMyProduct.jsx";
+import ContantPage from "./pages/Contact.jsx";
 
 function App() {
 
@@ -48,6 +49,10 @@ function App() {
         {
           path: "login",
           element: <Login />,
+        },
+        {
+          path: "contant",
+          element: <ContantPage/>,
         }
         ,{
           path: "admin",

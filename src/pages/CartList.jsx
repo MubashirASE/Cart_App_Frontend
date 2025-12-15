@@ -6,7 +6,7 @@ import API_URL from "../api/api.js";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cart, cartItems, setCartItems ,fetchCartItems} = useCart();
+  const { cart, cartItems, setCartItems, fetchCartItems } = useCart();
   const [Data, setData] = useState([]);
   const navigate = useNavigate();
 
@@ -36,15 +36,18 @@ const Cart = () => {
     }
   };
 
-  const increaseValue = (id) => {
-    setCartItems((prevData) =>
-      prevData.map((item) => {
+
+  const increaseValue = async (id) => {
+    setCartItems((prev) =>
+      prev.map((item) => {
         if (item.productId._id === id) {
-          console.log(item.productId.quantity);
-          const items = item?.productId
-          const quantity = items.quantity - item.quantity;
-          console.log(quantity);
-          if (quantity >= 1) {
+          const available = item.productId.quantity - item.quantity;
+
+          if (available >= 1) {
+            API_URL.patch(`/cart/update/${item.productId._id}`, {
+              quantity: item.quantity + 1
+            });
+
             return { ...item, quantity: item.quantity + 1 };
           }
         }
@@ -53,14 +56,18 @@ const Cart = () => {
     );
   };
 
-  const decreaseValue = (id) => {
-    setCartItems((preData) =>
-      preData.map((item) => {
-        if (item.productId._id === id) {
 
-          if (item.quantity > 1) {
-            return { ...item, quantity: item.quantity - 1 };
-          }
+
+  const decreaseValue = async (id) => {
+    setCartItems((prev) =>
+      prev.map((item) => {
+        if (item.productId._id === id && item.quantity > 1) {
+
+          API_URL.patch(`/cart/update/${item.productId._id}`, {
+            quantity: item.quantity - 1
+          });
+
+          return { ...item, quantity: item.quantity - 1 };
         }
         return item;
       })
@@ -68,9 +75,9 @@ const Cart = () => {
   };
 
   useEffect(() => {
-    console.log("CartItems>>>>>>", cartItems);
-    fetchCartItems()
-  }, [Data]);
+    fetchCartItems();
+  }, []);
+
 
   const checkOut = async () => {
     try {
@@ -101,15 +108,14 @@ const Cart = () => {
 
   useEffect(() => {
     console.log(cartItems)
-    
+
   }, [cartItems])
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-10">
       <h2 className="text-2xl font-bold mb-6 text-gray-800">Shopping Cart</h2>
 
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-        {/* Header - Hidden on mobile */}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden mt-10">
         <div className="hidden md:grid grid-cols-12 gap-4 p-4 bg-gray-50 border-b border-gray-100 font-medium text-gray-500 text-sm uppercase tracking-wider">
           <div className="col-span-5">Product</div>
           <div className="col-span-2 text-center">Price</div>
@@ -124,20 +130,17 @@ const Cart = () => {
             </div>
           ) : (
             cartItems.map((ele) => (
-              <div key={ele?._id || Math.random()} className="p-4 md:grid md:grid-cols-12 md:gap-4 md:items-center flex flex-col gap-4">
-                {/* Product Name */}
+              <div key={ele?._id || Math.random()} className="p-4 md:grid md:grid-cols-12 md:gap-4 md:items-center flex flex-col ">
                 <div className="col-span-5 font-medium text-gray-900 flex items-center justify-between md:justify-start">
                   <span className="md:hidden text-gray-500 text-sm">Product:</span>
                   <span className="truncate">{ele?.productId?.name || "Unknown Product"}</span>
                 </div>
 
-                {/* Price */}
                 <div className="col-span-2 text-center md:text-center flex items-center justify-between md:justify-center">
                   <span className="md:hidden text-gray-500 text-sm">Price:</span>
                   <span className="text-gray-900">${ele.productId?.price || 0}</span>
                 </div>
 
-                {/* Quantity */}
                 <div className="col-span-3 flex items-center justify-between md:justify-center">
                   <span className="md:hidden text-gray-500 text-sm">Quantity:</span>
                   <div className="flex items-center space-x-2">
@@ -157,7 +160,6 @@ const Cart = () => {
                   </div>
                 </div>
 
-                {/* Stock Status & Remove */}
                 <div className="col-span-2 flex items-center justify-between md:justify-center space-x-4">
                   <div className="text-sm">
                     {(ele.productId?.quantity || 0) - ele.quantity <= 0 ? (
@@ -181,7 +183,7 @@ const Cart = () => {
       </div>
 
       {cartItems.length > 0 && (
-        <div className="mt-8 flex justify-end">
+        <div className="mt-12 flex justify-end">
           <button
             onClick={() => {
               checkOut();

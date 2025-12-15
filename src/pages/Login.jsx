@@ -53,23 +53,27 @@ const Login = () => {
         console.log(user.data)
 
         if (user.data.success) {
-          if (user.data.requireOtp) {
-            toast.info(user.data.message);
-            navigate("/verify", { state: { email: loginData.email } });
-          } else {
+        //   if (user.data.requireOtp) {
+        //     toast.info(user.data.message);
+        //     navigate("/verify", { state: { email: loginData.email } });
+        //   } else {
             setUser(user.data.token, user.data.userData)
             toast.success(user.data.message)
-            navigate("/")
-          }
+            if(user.data.userData.role === 'user'){
+              navigate("/");
+            }else{
+              navigate("/admin");
+            }
+          // }
         } else {
-
           toast.error(user.data.message)
           setloading(false);
 
         }
       } catch (error) {
         console.error(error);
-        toast.error("Something went wrong!");
+          toast.error(error.response.data.message)
+          setloading(false);
 
       }
     }

@@ -12,11 +12,10 @@ const UsePaymentCart = () => {
   const [cvv, setCvv] = useState("");
   const [paymentMethod, setPaymentMethod] = useState("CARD");
   const [loading, setLoading] = useState(true);
-  const navigate=useNavigate()
+  const navigate = useNavigate();
+
   useEffect(() => {
-    if (cartItems.length > 0) {
-      setLoading(false);
-    }
+    if (cartItems.length > 0) setLoading(false);
   }, [cartItems]);
 
   const calculateTotal = () => {
@@ -28,26 +27,21 @@ const UsePaymentCart = () => {
 
   const handlePlaceOrder = async (e) => {
     e && e.preventDefault();
-
     try {
       const orderData = {
         userId: userData?.user?._id,
         paymentMethod,
-        items: cartItems.map(item => ({
+        items: cartItems.map((item) => ({
           productId: item.productId._id,
-          quantity: item.quantity
+          quantity: item.quantity,
         })),
         totalAmount: calculateTotal(),
-        // optionally include card info if needed
       };
-
       const res = await API_URL.post("/order/placeOrder", orderData);
       if (res.data.success) {
         toast.success("Order placed successfully!");
-        navigate("/")
-      } else {
-        toast.error("Failed to place order");
-      }
+        navigate("/");
+      } else toast.error("Failed to place order");
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong");
@@ -55,33 +49,45 @@ const UsePaymentCart = () => {
   };
 
   if (loading) return <div>Loading...</div>;
-
   if (cartItems.length === 0) return <p>No items in cart.</p>;
 
   return (
-    <div className="p-6">
-      <h2 className="text-2xl font-bold mb-4 text-blue-600">
+    <div className="m-15 sm:p-6 md:p-8 ">
+      <h2 className="text-2xl font-bold mb-6 text-blue-600">
         {userData?.user?.name}'s Cart
       </h2>
 
-      <div className="space-y-4 grid-cols-2 flex">
-        <div className="w-full p-5">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Cart Items */}
+        <div className="space-y-4">
           {cartItems.map((item) => (
-            <div key={item._id} className="flex justify-between p-4 rounded">
-              <div>
-                <p className="font-semibold">{item.productId.name}</p>
-                <p>Price: ${item.productId.price}</p>
-                <p>Quantity: {item.quantity}</p>
+            <div
+              key={item._id}
+              className="flex flex-col sm:flex-row justify-between items-start sm:items-center bg-white p-4 rounded shadow"
+            >
+              <div className="flex items-center space-x-4">
+                <img
+                  src={`http://localhost:3001${item.productId?.image}`}
+                  alt={item.productId?.name}
+                  className="w-24 h-24 object-cover rounded-lg"
+                />
+                <div>
+                  <p className="font-semibold">{item.productId.name}</p>
+                  <p>Price: ${item.productId.price}</p>
+                  <p>Quantity: {item.quantity}</p>
+                </div>
               </div>
-              <div>
-                <p>Total: ${item.quantity * item.productId.price}</p>
-              </div>
+              <p className="mt-2 sm:mt-0 font-bold">
+                Total: ${item.quantity * item.productId.price}
+              </p>
             </div>
           ))}
         </div>
 
-        <div className="w-full p-5 space-y-4">
-          <div className="flex gap-4 mb-4">
+        {/* Payment Section */}
+        <div className="space-y-4">
+          {/* Payment Method Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => setPaymentMethod("CARD")}
               className={`px-4 py-2 rounded font-semibold ${
@@ -92,7 +98,6 @@ const UsePaymentCart = () => {
             >
               Pay by Card
             </button>
-
             <button
               onClick={() => setPaymentMethod("COD")}
               className={`px-4 py-2 rounded font-semibold ${
@@ -105,6 +110,7 @@ const UsePaymentCart = () => {
             </button>
           </div>
 
+          {/* Card Payment Form */}
           {paymentMethod === "CARD" ? (
             <form onSubmit={handlePlaceOrder} className="space-y-4">
               <div>
@@ -113,9 +119,9 @@ const UsePaymentCart = () => {
                   type="text"
                   value={cardNumber}
                   onChange={(e) => setCardNumber(e.target.value)}
-                  className="w-full border px-3 py-2 rounded"
                   placeholder="1234 5678 9012 3456"
                   required
+                  className="w-full border px-3 py-2 rounded"
                 />
               </div>
 
@@ -127,41 +133,41 @@ const UsePaymentCart = () => {
                   type="text"
                   value={accountHolder}
                   onChange={(e) => setAccountHolder(e.target.value)}
-                  className="w-full border px-3 py-2 rounded"
                   placeholder="John Doe"
                   required
+                  className="w-full border px-3 py-2 rounded"
                 />
               </div>
 
-              <div className="flex gap-4">
-                <div className="flex-1">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div>
                   <label className="block font-medium mb-1">Expiry Date</label>
                   <input
                     type="text"
                     value={expiryDate}
                     onChange={(e) => setExpiryDate(e.target.value)}
-                    className="w-full border px-3 py-2 rounded"
                     placeholder="MM/YY"
                     required
+                    className="w-full border px-3 py-2 rounded"
                   />
                 </div>
 
-                <div className="flex-1">
+                <div>
                   <label className="block font-medium mb-1">CVV</label>
                   <input
                     type="password"
                     value={cvv}
                     onChange={(e) => setCvv(e.target.value)}
-                    className="w-full border px-3 py-2 rounded"
                     placeholder="123"
                     required
+                    className="w-full border px-3 py-2 rounded"
                   />
                 </div>
               </div>
 
-              <div className="flex justify-between mt-4 p-4 bg-gray-100 rounded">
-                <p className="font-bold">Grand Total:</p>
-                <p className="font-bold">${calculateTotal()}</p>
+              <div className="flex justify-between p-4 bg-gray-100 rounded font-bold">
+                <p>Grand Total:</p>
+                <p>${calculateTotal()}</p>
               </div>
 
               <button
@@ -173,11 +179,10 @@ const UsePaymentCart = () => {
             </form>
           ) : (
             <div className="space-y-4">
-              <div className="p-4 bg-gray-100 rounded flex justify-between">
-                <p className="font-bold">Grand Total:</p>
-                <p className="font-bold">${calculateTotal()}</p>
+              <div className="flex justify-between p-4 bg-gray-100 rounded font-bold">
+                <p>Grand Total:</p>
+                <p>${calculateTotal()}</p>
               </div>
-
               <button
                 onClick={handlePlaceOrder}
                 className="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-md font-semibold"

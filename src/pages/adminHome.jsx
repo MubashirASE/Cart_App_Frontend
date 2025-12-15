@@ -65,11 +65,6 @@ const AdminHome = () => {
             className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin/adminUpdateProduct")}`}>
             Update Product
            </Link>
-           <Link         
-            to={userData?.role !== "user" ? "/admin/adminCreateProduct" : "#"}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin/adminCreateProduct")}`}>
-            New Product
-           </Link>
         </nav>
       </div>
 
