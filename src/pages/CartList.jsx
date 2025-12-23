@@ -6,7 +6,7 @@ import API_URL from "../api/api.js";
 import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
-  const { cart, cartItems, setCartItems, fetchCartItems } = useCart();
+  const { cart, cartItems, setCartItems ,fetchCartItems} = useCart();
   const [Data, setData] = useState([]);
   const navigate = useNavigate();
 
@@ -38,45 +38,45 @@ const Cart = () => {
 
 
   const increaseValue = async (id) => {
-    setCartItems((prev) =>
-      prev.map((item) => {
-        if (item.productId._id === id) {
-          const available = item.productId.quantity - item.quantity;
+  setCartItems((prev) =>
+    prev.map((item) => {
+      if (item.productId._id === id) {
+        const available = item.productId.quantity - item.quantity;
 
-          if (available >= 1) {
-            API_URL.patch(`/cart/update/${item.productId._id}`, {
-              quantity: item.quantity + 1
-            });
-
-            return { ...item, quantity: item.quantity + 1 };
-          }
-        }
-        return item;
-      })
-    );
-  };
-
-
-
-  const decreaseValue = async (id) => {
-    setCartItems((prev) =>
-      prev.map((item) => {
-        if (item.productId._id === id && item.quantity > 1) {
-
+        if (available >= 1) {
           API_URL.patch(`/cart/update/${item.productId._id}`, {
-            quantity: item.quantity - 1
+            quantity: item.quantity + 1
           });
 
-          return { ...item, quantity: item.quantity - 1 };
+          return { ...item, quantity: item.quantity + 1 };
         }
-        return item;
-      })
-    );
-  };
+      }
+      return item;
+    })
+  );
+};
+
+
+
+const decreaseValue = async (id) => {
+  setCartItems((prev) =>
+    prev.map((item) => {
+      if (item.productId._id === id && item.quantity > 1) {
+
+        API_URL.patch(`/cart/update/${item.productId._id}`, {
+          quantity: item.quantity - 1
+        });
+
+        return { ...item, quantity: item.quantity - 1 };
+      }
+      return item;
+    })
+  );
+};
 
   useEffect(() => {
-    fetchCartItems();
-  }, []);
+  fetchCartItems();
+}, []);
 
 
   const checkOut = async () => {
@@ -108,7 +108,7 @@ const Cart = () => {
 
   useEffect(() => {
     console.log(cartItems)
-
+    
   }, [cartItems])
 
   return (

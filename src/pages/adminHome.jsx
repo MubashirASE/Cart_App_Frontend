@@ -1,13 +1,25 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
 import { useCart } from "../contextData/CartContext";
-import { FaChartLine, FaUsers, FaUserShield, FaPlus, FaList } from "react-icons/fa";
+import {
+  FaChartLine,
+  FaUsers,
+  FaUserShield,
+  FaPlus,
+  FaList,
+  FaBoxes,
+  FaShoppingBag,
+  FaUserCog,
+  FaFolderOpen,
+} from "react-icons/fa";
 
 const AdminHome = () => {
   const { userData } = useCart();
   const location = useLocation();
 
   const isActive = (path) => {
-    return location.pathname === path ? "bg-blue-50 text-blue-600" : "text-gray-600 hover:bg-gray-50 hover:text-blue-600";
+    return location.pathname === path
+      ? "bg-blue-50 text-blue-600"
+      : "text-gray-600 hover:bg-gray-50 hover:text-blue-600";
   };
 
   return (
@@ -21,7 +33,9 @@ const AdminHome = () => {
         <nav className="space-y-1 px-3">
           <Link
             to={userData?.role === "admin" ? "/admin" : "/admin"}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin")}`}
+            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive(
+              "/admin"
+            )}`}
           >
             <FaChartLine className="mr-3 text-lg" />
             Dashboard
@@ -29,42 +43,66 @@ const AdminHome = () => {
 
           {userData?.user?.role === "superAdmin" && (
             <>
-              <Link
+              {/* <Link
                 to="/admin/adminCreated"
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin/adminCreated")}`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive(
+                  "/admin/adminCreated"
+                )}`}
               >
                 Add Admin
-              </Link>
+              </Link> */}
               <Link
                 to="/admin/adminDetails"
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin/adminDetails")}`}
+                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
+                  "/admin/adminDetails"
+                )}`}
               >
-                Admin Details
+                <FaUserCog /> Admin Details
               </Link>
             </>
           )}
 
           <Link
             to={userData?.role !== "user" ? "/admin/adminUser" : "#"}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin/adminUser")}`}
+            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
+              "/admin/adminUser"
+            )}`}
           >
+            <FaUsers />
             User Details
           </Link>
-          <Link  
+          {/* <Link
             to={userData?.role !== "user" ? "/admin/adminAllProduct" : "#"}
-          className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin/adminAllProduct")}`}>
-            All Products
-          </Link>
-          <Link         
+            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
+              "/admin/adminAllProduct"
+            )}`}
+          >
+           <FaShoppingBag />  Products
+          </Link> */}
+          <Link
             to={userData?.role !== "user" ? "/admin/adminMyProduct" : "#"}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin/adminMyProduct")}`}>
-            My Product
-           </Link>
-           <Link         
+            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
+              "/admin/adminMyProduct"
+            )}`}
+          >
+            <FaShoppingBag /> Product
+          </Link>
+          {/* <Link
             to={userData?.role !== "user" ? "/admin/adminUpdateProduct" : "#"}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive("/admin/adminUpdateProduct")}`}>
+            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive(
+              "/admin/adminUpdateProduct"
+            )}`}
+          >
             Update Product
-           </Link>
+          </Link> */}
+          <Link
+            to={userData?.role !== "user" ? "/admin/adminCategory" : "#"}
+            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
+              "/admin/adminCategory"
+            )}`}
+          >
+            <FaFolderOpen /> Category Management
+          </Link>
         </nav>
       </div>
 

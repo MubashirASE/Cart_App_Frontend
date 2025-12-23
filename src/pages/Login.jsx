@@ -1,5 +1,4 @@
 import { useState } from "react";
-import axios from 'axios';
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import API_URL from "../api/api";
@@ -89,7 +88,7 @@ const Login = () => {
           
         </div>
         <div className="mt-8 space-y-6">
-          <div className="rounded-md shadow-sm space-y-4">
+          <div className="rounded-md  space-y-4">
             <div>
               <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">
                 Email address

@@ -58,7 +58,6 @@ const UsePaymentCart = () => {
       </h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        {/* Cart Items */}
         <div className="space-y-4">
           {cartItems.map((item) => (
             <div
@@ -67,7 +66,7 @@ const UsePaymentCart = () => {
             >
               <div className="flex items-center space-x-4">
                 <img
-                  src={`http://localhost:3001${item.productId?.image}`}
+                  src={item.productId?.image}
                   alt={item.productId?.name}
                   className="w-24 h-24 object-cover rounded-lg"
                 />
@@ -84,9 +83,7 @@ const UsePaymentCart = () => {
           ))}
         </div>
 
-        {/* Payment Section */}
         <div className="space-y-4">
-          {/* Payment Method Buttons */}
           <div className="flex flex-col sm:flex-row gap-4">
             <button
               onClick={() => setPaymentMethod("CARD")}

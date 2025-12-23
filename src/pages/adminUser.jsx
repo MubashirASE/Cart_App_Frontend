@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API_URL from "../api/api";
 import { useCart } from "../contextData/CartContext";
-import { FaPaperPlane, FaUserCheck, FaUserSlash } from "react-icons/fa";
+import { FaPaperPlane, FaShoppingBag, FaUserCheck, FaUserSlash } from "react-icons/fa";
 import { MdRemoveShoppingCart, MdSend, MdShoppingCart } from "react-icons/md";
 import Modal from "../components/popup";
 

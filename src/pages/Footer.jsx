@@ -2,7 +2,7 @@ import React from "react";
 
 const Footer = () => {
   return (
-    <footer className="bg-black text-white  py-8 px-10 sticky">
+    <footer className="bg-black text-white  py-8 px-10 ">
       <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12">
         <div>
           <h1 className="text-lg font-bold mb-3">GoCartify</h1>
@@ -28,8 +28,8 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a href="/contact" className="hover:text-blue-500 transition">
-                Contact
+              <a href="/contant" className="hover:text-blue-500 transition">
+                Contant
               </a>
             </li>
           </ul>

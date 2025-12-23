@@ -1,10 +1,10 @@
 import { useEffect, useState, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { useCart } from "../contextData/CartContext.jsx";
 import { toast } from "react-toastify";
 import API_URL from "../api/api.js";
-import AutoCarousel from "../components/ AutoCarousel.jsx";
+import AutoCarousel from "../components/AutoCarousel.jsx";
 
 const Home = () => {
   const { userData } = useCart();
@@ -13,16 +13,7 @@ const Home = () => {
   const { setCartItems, fetchCartItems } = useCart();
   const [loading, setloading] = useState(false);
   const images = ["/home4.jpg", "/home5.jpg", "/home6.jpeg", "/home1.png"];
-  const categoryData = [
-    "/CellPhone.png",
-    "/Computer.png",
-    "/Gamepad.png",
-    "/Headphone.png",
-    "/CellPhone.png",
-    "/Computer.png",
-    "/Gamepad.png",
-    "/Headphone.png",
-  ];
+  const [categories, setCategories] = useState([]);
 
   const flashSalesScrollRef = useRef(null);
   const categoriesScrollRef = useRef(null);
@@ -42,6 +33,7 @@ const Home = () => {
       console.log(error);
     }
   };
+
   useEffect(() => {
     fetchProducts();
     fetchCartItems();
@@ -95,7 +87,9 @@ const Home = () => {
     }
   };
 
-  const displayedBestSellingProducts = showAllBestSelling ? data : data.slice(0, 4);
+  const displayedBestSellingProducts = showAllBestSelling
+    ? data
+    : data.slice(0, 4);
   const [currentPage, setCurrentPage] = useState(0);
   const itemsPerPage = 8;
 
@@ -110,11 +104,34 @@ const Home = () => {
       setCurrentPage(currentPage + 1);
     }
   };
+  const fetchCategories = async () => {
+    setloading(true);
+    try {
+      const data = await API_URL.get("/category/user/all");
+      console.log(data.data.categories);
+      setCategories(
+        Array.isArray(data.data.categories) ? data.data.categories : []
+      );
+      console.log("categories", categories);
+    } catch (error) {
+      toast.error(error.message || "Error fetching categories");
+      console.error("Error fetching categories:", error);
+    } finally {
+      setloading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchCategories();
+  }, []);
 
   const handlePrev = () => {
     if (currentPage > 0) {
       setCurrentPage(currentPage - 1);
     }
+  };
+  const handleCategoryClick = (ele) => {
+    navigate(`/categoryProducts/${ele._id}`, { state: ele });
   };
 
   return (
@@ -127,15 +144,20 @@ const Home = () => {
         <div className="space-y-10">
           <div className="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-4">
             <div className="col-span-1 space-y-5 list-none p-8">
-              <li>Woman's Fashion</li>
-              <li>Woman's Fashion</li>
-              <li>Electronics</li>
-              <li>Home & lifestyle</li>
-              <li>Medicine</li>
-              <li>Sport & Outdoor</li>
-              <li>Babay & Toys</li>
-              <li>Groceries & Pets</li>
-              <li>Health & Beauty</li>
+              <div className="">
+                {categories.map(
+                  (ele) =>
+                    ele.parent === null && (
+                      <div
+                        key={ele._id}
+                        className="p-4 rounded-lg cursor-pointer hover:bg-blue-50 "
+                        onClick={() => handleCategoryClick(ele)}
+                      >
+                        <span className="font-medium">{ele.name}</span>
+                      </div>
+                    )
+                )}
+              </div>
             </div>
 
             <div className="col-span-3 p-10 border-l-0 md:border-l md:border-gray-300 ">
@@ -203,7 +225,7 @@ const Home = () => {
                     <div className="relative group">
                       <div className="relative group w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5">
                         <img
-                          src={`http://localhost:3001${ele.image}`}
+                          src={ele.image}
                           sizes={20}
                           alt={ele.name}
                           className="w-full h-full object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
@@ -277,7 +299,7 @@ const Home = () => {
                     <div className="relative group">
                       <div className="relative group w-full h-[250px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5">
                         <img
-                          src={`http://localhost:3001${ele.image}`}
+                          src={ele.image}
                           alt={ele.name}
                           className="w-full h-full object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
                         />
@@ -329,7 +351,7 @@ const Home = () => {
                   className="bg-blue-500 hover:bg-blue-600 py-4 rounded-lg text-white px-12"
                   onClick={() => setShowAllFlashSales(false)}
                 >
-                  Not Show All Products
+                  Less Show All Products
                 </button>
               ) : (
                 <button
@@ -376,23 +398,26 @@ const Home = () => {
               ref={categoriesScrollRef}
               className="flex overflow-x-auto space-x-6 p-4 scrollbar-hide border-b border-gray-200 pb-13"
             >
-              {categoryData?.map((ele, i) => (
-                <div
-                  key={i}
-                  className="min-w-[220px] bg-white rounded-xl shadow-sm transition-shadow duration-100 overflow-hidden flex-shrink-0 flex flex-col items-center justify-center group hover:bg-blue-500 cursor-pointer"
-                >
-                  <div className="relative w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5 flex items-center justify-center flex-col">
-                    <img
-                      src={ele}
-                      alt={ele}
-                      className="w-20 h-20 object-contain transition-transform duration-300 group-hover:scale-105 group-hover:filter group-hover:brightness-0 group-hover:invert"
-                    />
-                    <div className="text-center text-gray-800 font-medium mt-2 transition-colors duration-100 group-hover:text-white">
-                      {ele.split("/")[1].replace(".png", "")}
+              {categories
+                ?.filter((ele) => ele.parent === null)
+                .map((ele, i) => (
+                  <div
+                    key={i}
+                    className="min-w-[220px] bg-white rounded-xl shadow-sm transition-shadow duration-100 overflow-hidden flex-shrink-0 flex flex-col items-center justify-center group hover:bg-blue-500 cursor-pointer"
+                    onClick={() => handleCategoryClick(ele)}
+                  >
+                    <div className="relative w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5 flex items-center justify-center flex-col">
+                      <img
+                        src={ele.image}
+                        alt={ele.name}
+                        className="w-30 h-30 object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="text-center text-gray-800 font-medium mt-2 transition-colors duration-100 group-hover:text-gray-800">
+                        {ele.name}
+                      </div>
                     </div>
                   </div>
-                </div>
-              ))}
+                ))}
             </div>
           </div>
           <div className="space-y-5 px-5">
@@ -416,7 +441,7 @@ const Home = () => {
                     className="bg-blue-500 hover:bg-blue-600 py-2 px-6 rounded-lg text-white"
                     onClick={() => setShowAllBestSelling(false)}
                   >
-                    Not Show All Products
+                    Less Show All Products
                   </button>
                 ) : (
                   <button
@@ -438,7 +463,7 @@ const Home = () => {
                   <div className="relative group">
                     <div className="relative group w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5">
                       <img
-                        src={`http://localhost:3001${ele.image}`}
+                        src={ele.image}
                         alt={ele.name}
                         className="w-full h-full object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
                       />
@@ -540,8 +565,7 @@ const Home = () => {
                   <div className="relative group">
                     <div className="relative group w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5">
                       <img
-                        src={`http://localhost:3001${ele.image}`}
-                        alt={ele.name}
+src={ele.image}                        alt={ele.name}
                         className="w-full h-full object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
                       />
                     </div>
@@ -607,7 +631,7 @@ const Home = () => {
                     <div className="relative group">
                       <div className="relative group w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5">
                         <img
-                          src={`http://localhost:3001${ele.image}`}
+                          src={ele.image}
                           alt={ele.name}
                           className="w-full h-full object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
                         />
@@ -675,7 +699,7 @@ const Home = () => {
                     <div className="relative group">
                       <div className="relative group w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5">
                         <img
-                          src={`http://localhost:3001${ele.image}`}
+                          src={ele.image}
                           alt={ele.name}
                           className="w-full h-full object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
                         />
@@ -740,7 +764,7 @@ const Home = () => {
                   className="bg-blue-500 hover:bg-blue-600 py-4 rounded-lg text-white px-12"
                   onClick={() => setShowAllExploreProducts(false)}
                 >
-                  Not Show All Products
+                  Less Show All Products
                 </button>
               ) : (
                 <button
@@ -833,16 +857,24 @@ const Home = () => {
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 flex flex-row ">
-              <div className="bg-black flex items-end justify-center"><img src="bg3.png"/></div>
-              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 flex flex-col gap-6">
-                <div  className="bg-black flex items-end justify-center" ><img src="home1.png"/></div>
-                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 flex">
-                  <div  className="bg-black flex items-end justify-center"><img src="bg.png"/></div>
-                  <div  className="bg-black flex items-end justify-center"><img src="bg1.png"/></div>
+              <div className="bg-black flex items-end justify-center">
+                <img src="bg3.png" />
               </div>
+              <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-1 flex flex-col gap-6">
+                <div className="bg-black flex items-end justify-center">
+                  <img src="home1.png" />
                 </div>
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-6 flex">
+                  <div className="bg-black flex items-end justify-center">
+                    <img src="bg.png" />
                   </div>
+                  <div className="bg-black flex items-end justify-center">
+                    <img src="bg1.png" />
                   </div>
+                </div>
+              </div>
+            </div>
+          </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 space-y-2 flex justify-center align-center h-full w-full ">
             <div className="flex justify-center items-center flex-col p-20 ">
               <img src="/Services.png" className="w-20" />

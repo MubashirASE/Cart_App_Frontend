@@ -1,18 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import API_URL from "../api/api";
-import { AiFillCheckCircle } from "react-icons/ai";
-import { MdCancel, MdInventory } from "react-icons/md";
-import { IoCheckmarkCircleOutline } from "react-icons/io5";
-import { FaTimesCircle } from "react-icons/fa";
-import { CiBoxes } from "react-icons/ci";
-import { PiPackageDuotone, PiPackageFill } from "react-icons/pi";
-import { LuBoxes } from "react-icons/lu";
+import { FaShoppingBag, FaTimesCircle } from "react-icons/fa";
+import Modal from "../components/popup";
+import AdminAddData from "./adminAddData";
 
 export const AdminDetails = () => {
   const [product, setProduct] = useState();
   const [member, setMember] = useState();
   const [loading, setloading] = useState(false);
+  const [openCreateModal, setOpenCreateModal] = useState(false);
 
   const allfetchData = async () => {
     const adminData = await API_URL.get(`/user/alladminData`);
@@ -67,10 +64,22 @@ export const AdminDetails = () => {
     <div className="p-8 space-y-6">
       <div className="flex justify-between items-center">
         <h1 className="text-2xl font-bold text-gray-800">All Admins Details</h1>
+        <button
+          onClick={() => setOpenCreateModal(true)}
+          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg"
+        >
+          Add Admin
+        </button>
+        <Modal open={openCreateModal} onClose={() => setOpenCreateModal(false)}>
+          <AdminAddData
+            closeModal={() => setOpenCreateModal(false)}
+            fetchData={() => allfetchData()}
+          />
+        </Modal>
       </div>
       {loading ? (
         <div className="flex justify-center items-center h-64">
-          <div className="spinner"></div>
+          <div className="spinner "></div>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -153,10 +162,11 @@ export const AdminDetails = () => {
                         <button
                           onClick={() => handleBlock(a._id, a.isBlocked)}
                           className={`inline-flex items-center px-3 py-1.5 border border-transparent text-xs font-medium rounded-2xl shadow-sm focus:outline-none focus:ring-2 focus:ring-offset-2 transition-colors
-                                       ${a.isBlocked
-                              ? "bg-green-200 hover:bg-green-300 focus:ring-green-500 text-green-700"
-                              : "bg-red-200 hover:bg-red-300 focus:ring-red-500 text-red-700"
-                            }`}
+                                       ${
+                                         a.isBlocked
+                                           ? "bg-green-200 hover:bg-green-300 focus:ring-green-500 text-green-700"
+                                           : "bg-red-200 hover:bg-red-300 focus:ring-red-500 text-red-700"
+                                       }`}
                         >
                           {a.isBlocked ? "Unblock Admin" : "Block Admin"}
                         </button>
