@@ -1,29 +1,28 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import "./App.css";
-import Home from "./pages/Home.jsx";
-import CartList from "./pages/CartList.jsx";
-import SignUp from "./pages/SignUp.jsx";
-import Login from "./pages/Login.jsx";
-import AdminDetailPage from "./pages/AdminDashboard.jsx";
-import AdminHome from "./pages/AdminHome.jsx";
-import AdminUserData from "./pages/AdminUser.jsx";
-import AdminDetails from "./pages/AdminDetails.jsx";
-import UsePaymentCart from "./pages/UsePaymentCart.jsx";
-import ProtectedRoute from "./pages/ProtectedRoutes.jsx";
-import VerifySuccess from "./pages/VerfiyPage.jsx";
-import VerifyPage from "./pages/VerfiyPage.jsx";
-import AdminAddData from "./pages/AdminAddData.jsx";
-import AdminAllProduct from "./pages/AdminAllProduct.jsx";
-import AdminUpdateProduct from "./pages/AdminUpdateProduct.jsx";
-import AdminCreateProduct from "./pages/AdminCreateProduct.jsx";
-import AdminMyProduct from "./pages/AdminMyProduct.jsx";
-import AdminCategory from "./pages/AdminCategory.jsx";
-import ContantPage from "./pages/Contact.jsx";
-import ProfilePage from "./pages/Profile.jsx";
-import AboutPage from "./pages/About.jsx";
-import CategoryWiseProduct from "./pages/CategoryWiseProduct.jsx";
+import Home from "./pages/public/Home/home.jsx";
+import CartList from "./pages/user/CartList.jsx";
+import SignUp from "./pages/public/SignUp.jsx";
+import Login from "./pages/public/Login.jsx";
+import Dashboard from "./pages/admin/Dashboard.jsx";
+import AdminHome from "./pages/admin/adminHome.jsx";
+import AllUserData from "./pages/admin/users/AllUserData.jsx";
+import AdminDetails from "./pages/admin/AdminDetails.jsx";
+import UsePaymentCart from "./pages/user/UsePaymentCart.jsx";
+import ProtectedRoute from "./components/common/ProtectedRoutes.jsx";
+import VerifyPage from "./pages/user/VerfiyPage.jsx";
+import VerifySuccess from "./pages/user/verfiySuccess.jsx";
+import AdminAddData from "./pages/admin/CreateAdmin.jsx";
+import AdminAllProduct from "./pages/admin/products/AllProduct.jsx";
+import AdminUpdateProduct from "./pages/admin/products/UpdateProduct.jsx";
+import AdminCreateProduct from "./pages/admin/products/CreateProduct.jsx";
+import AdminMyProduct from "./pages/admin/products/MyProduct.jsx";
+import AdminCategory from "./pages/admin/categories/AdminCategory.jsx";
+import ContactPage from "./pages/public/Contact.jsx";
+import ProfilePage from "./components/common/Profile.jsx";
+import AboutPage from "./pages/public/About.jsx";
+import CategoryWiseProduct from "./pages/public/categoryWiseProduct.jsx";
 import MainLayout from "./layout/mainlayout.jsx";
-
 function App() {
   const appRouter = createBrowserRouter([
     {
@@ -34,8 +33,8 @@ function App() {
           path: "/",
           element: (
             <ProtectedRoute userOnly={true}>
-              {" "}
-              <Home />{" "}
+
+              <Home />
             </ProtectedRoute>
           ),
         },
@@ -70,8 +69,8 @@ function App() {
           element: <Login />,
         },
         {
-          path: "contant",
-          element: <ContantPage />,
+          path: "contact",
+          element: <ContactPage />,
         },
         {
           path: "profile",
@@ -105,17 +104,17 @@ function App() {
           element: (
             <ProtectedRoute adminOnly={true}>
               {" "}
-              <AdminHome />
+              <Dashboard />
             </ProtectedRoute>
           ),
           children: [
             {
               path: "",
-              element: <AdminDetailPage />,
+              element: <AdminHome />,
             },
             {
               path: "adminUser",
-              element: <AdminUserData />,
+              element: <AllUserData />,
             },
             {
               path: "adminDetails",

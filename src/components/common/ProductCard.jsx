@@ -1,0 +1,69 @@
+import React from "react";
+import { FaShoppingCart } from "react-icons/fa";
+import { toast } from "react-toastify";
+
+const ProductCard = ({ product, onAddToCart, onUpdate, userRole, isFlashSale = false }) => {
+    const cardClass = isFlashSale
+        ? "w-[270px] min-w-[220px] bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden flex-shrink-0 flex flex-col"
+        : "bg-white rounded-xl shadow-sm hover:shadow-md transition-shadow duration-300 overflow-hidden border border-gray-100 flex flex-col m-15 lg:m-0 md:m-0 sm:m-0";
+
+    return (
+        <div className={cardClass}>
+            <div className="relative group">
+                <div className="relative group w-full h-[180px] sm:h-[220px] md:h-[250px] overflow-hidden rounded-lg p-5">
+                    <img
+                        src={product.image}
+                        alt={product.name}
+                        className="w-full h-full object-cover md:object-contain transition-transform duration-300 group-hover:scale-105"
+                    />
+                </div>
+
+                <button
+                    onClick={async (e) => {
+                        e.stopPropagation();
+                        try {
+                            await onAddToCart(product._id);
+                            toast.success("Added to cart");
+                        } catch (err) {
+                            console.error("Failed to add to cart:", err);
+                        }
+                    }}
+                    className="absolute top-3 right-3 bg-white p-2 rounded-full shadow-md text-blue-600 hover:bg-blue-50 hover:text-blue-700 transition-colors focus:outline-none"
+                    title="Add to Cart"
+                >
+                    <FaShoppingCart size={20} />
+                </button>
+            </div>
+
+            <div className="p-4 flex-grow flex flex-col">
+                <h3
+                    className="font-semibold text-lg text-gray-800 truncate mb-1"
+                    title={product.name}
+                >
+                    {product.name}
+                </h3>
+                <p className="text-sm text-gray-500 mb-3 truncate">
+                    <span className="font-medium">Serial:</span> {product.serial_number}
+                </p>
+
+                <div className="mt-auto flex items-center justify-between">
+                    <div className="text-sm text-gray-600">
+                        <span className="font-medium">Qty:</span> {product.quantity}
+                    </div>
+                    <div className="text-lg font-bold text-blue-600">${product.price}</div>
+                </div>
+
+                {userRole !== "user" && onUpdate && (
+                    <button
+                        className="mt-4 w-full bg-gray-100 hover:bg-gray-200 text-gray-800 py-2 px-4 rounded-lg transition-colors text-sm font-medium"
+                        onClick={() => onUpdate(product)}
+                    >
+                        Update Product
+                    </button>
+                )}
+            </div>
+        </div>
+    );
+};
+
+export default ProductCard;
