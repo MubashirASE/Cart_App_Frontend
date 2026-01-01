@@ -23,7 +23,6 @@ const ProductCard = ({ product, onAddToCart, onUpdate, userRole, isFlashSale = f
                         e.stopPropagation();
                         try {
                             await onAddToCart(product._id);
-                            toast.success("Added to cart");
                         } catch (err) {
                             console.error("Failed to add to cart:", err);
                         }

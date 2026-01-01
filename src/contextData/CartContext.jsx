@@ -21,8 +21,13 @@ export const CartProvider = ({ children }) => {
       token,
       user
     })
-    localStorage.setItem("token", token)
-    localStorage.setItem("user", JSON.stringify(user))
+    if (token) {
+      localStorage.setItem("token", token)
+      localStorage.setItem("user", JSON.stringify(user))
+    } else {
+      localStorage.removeItem("token")
+      localStorage.removeItem("user")
+    }
   }
 
   const fetchData = () => {
@@ -37,6 +42,7 @@ export const CartProvider = ({ children }) => {
 
 
   const fetchCartItems = async () => {
+    if (!userData?.token) return;
     try {
       const res = await API_URL.get("/cart/");
       const cartData = res.data.cart;
@@ -53,16 +59,15 @@ export const CartProvider = ({ children }) => {
     }
   };
 
-useEffect(() => {
-  if (userData?.token) {
-    fetchCartItems();
-  } else {
-    setCartItems([]); 
-  }
-}, [userData?.token]);
+  useEffect(() => {
+    if (userData?.token) {
+      fetchCartItems();
+    } else {
+      setCartItems([]);
+    }
+  }, [userData?.token]);
 
   useEffect(() => {
-    fetchCartItems();
     fetchData()
   }, []);
 

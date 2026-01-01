@@ -1,21 +1,19 @@
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import { useCart } from "../../../contextData/CartContext.jsx";
+import { useCart } from "../contextData/CartContext.jsx";
 import { toast } from "react-toastify";
-import API_URL from "../../../api/api";
+import API_URL from "../api/api";
 
 export const useHomeData = () => {
   const { userData } = useCart();
   const [data, setData] = useState([]);
   const navigate = useNavigate();
-  const { setCartItems, fetchCartItems } = useCart();
+  const { setCartItems, fetchCartItems , addToCart} = useCart();
   const [loading, setloading] = useState(false);
   const images = ["/home4.jpg", "/home5.jpg", "/home6.jpeg", "/home1.png"];
   const [categories, setCategories] = useState([]);
-
   const flashSalesScrollRef = useRef(null);
   const categoriesScrollRef = useRef(null);
-
   const [showAllFlashSales, setShowAllFlashSales] = useState(false);
   const [showAllBestSelling, setShowAllBestSelling] = useState(false);
   const [showAllExploreProducts, setShowAllExploreProducts] = useState(false);
@@ -39,14 +37,16 @@ export const useHomeData = () => {
   const Cart = async (productId) => {
     try {
       const res = await API_URL.post(`/cart/add/${productId}`);
+      console.log("res", res.data);
       toast.success(res.data.message, {
         style: {
-          color: "#306dfd",
+          color: "green",
           fontWeight: "600",
           fontSize: "17px",
           background: "#F7F7F7",
         },
       });
+      fetchCartItems();
       return res.data.cart.items;
     } catch (error) {
       toast.error(error.response.data.message);

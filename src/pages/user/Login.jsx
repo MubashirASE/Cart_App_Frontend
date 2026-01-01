@@ -2,35 +2,33 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import API_URL from "../../api/api";
-const CreateAdmin = ({closeModal , fetchData}) => {
-  const [signupData, setSignUpData] = useState({
-    name: "",
+import { useCart } from "../../contextData/CartContext";
+
+const Login = () => {
+  const [loginData, setLoginData] = useState({
     email: "",
-    password: "",
-    role: "admin"
-  })
+    password: ""
+  });
   const [errors, setErrors] = useState({});
+  const { setUser } = useCart();
   const [loading, setloading] = useState(false);
+
   const navigate = useNavigate()
+  let newErrors = {};
+
   const validateForm = () => {
-    let newErrors = {};
-    if (!signupData.name) {
-      newErrors.name = 'Email is required';
-    }
-    if (!signupData.email) {
+
+    if (!loginData.email) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(signupData.email)) {
+    } else if (!/\S+@\S+\.\S/.test(loginData.email)) {
       newErrors.email = 'Email address is invalid';
     }
 
-    if (!signupData.password) {
+    if (!loginData.password) {
       newErrors.password = 'Password is required';
-    } else if (signupData.password.length < 8) {
+    }
+    else if (loginData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters long';
-    } else if (!/[A-Z]/.test(signupData.password)) {
-      newErrors.password = 'Password must be at least 1 uppercase';
-    } else if (!/[!@#$%^&*(),?":;{}|<>]/.test(signupData.password)) {
-      newErrors.password = 'Password must be at least 1 special character';
     }
 
     setErrors(newErrors);
@@ -39,61 +37,53 @@ const CreateAdmin = ({closeModal , fetchData}) => {
   };
 
   const handleChange = (e) => {
-    setSignUpData({
-      ...signupData,
+    setLoginData({
+      ...loginData,
       [e.target.name]: e.target.value
-    })
-  }
+    });
+  };
+
   const handleSubmit = async () => {
-    if (!validateForm()) return;
-    setloading(true)
+    if (validateForm()) {
+      setloading(true);
 
-    try {
-      const response = await API_URL.post("/user/signup", signupData);
-      const data = response.data;
+      try {
+        const user = await API_URL.post('/user/login', loginData)
+        console.log(user.data)
 
-      if (data.success) {
-        navigate("/admin/adminDetails");
-      } else {
-        toast.error(data.message);
+        if (user.data.success) {
+            setUser(user.data.token, user.data.userData)
+            toast.success(user.data.message)
+            if(user.data.userData.role === 'user'){
+              navigate("/");
+            }else{
+              navigate("/admin");
+            }
+        } else {
+          toast.error(user.data.message)
+          setloading(false);
+
+        }
+      } catch (error) {
+        console.error(error);
+          toast.error(error.response.data.message)
+          setloading(false);
+
       }
-      closeModal()
-      fetchData()
-    } catch (err) {
-      console.error(err);
-      toast.error("Admin created failed, please try again.");
     }
-  }
 
+  }
   return (
-    <div className="">
-      <div className="max-w-md w-full space-y-8 p-8 rounded-xl ">
+    <div className="min-h-screen flex justify-center items-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-blue-500">
-            Create Admin Account
+          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+            Login
           </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Add a new administrator to the system
-          </p>
+          
         </div>
         <div className="mt-8 space-y-6">
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
-                Name
-              </label>
-              <input
-                id="name"
-                name="name"
-                type="text"
-                required
-                className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter admin name"
-                value={signupData.name}
-                onChange={handleChange}
-              />
-              {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
-            </div>
+          <div className="rounded-md  space-y-4">
             <div>
               <label htmlFor="email-address" className="block text-sm font-medium text-gray-700 mb-1">
                 Email address
@@ -105,8 +95,8 @@ const CreateAdmin = ({closeModal , fetchData}) => {
                 autoComplete="email"
                 required
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter admin email"
-                value={signupData.email}
+                placeholder="Enter your email"
+                value={loginData.email}
                 onChange={handleChange}
               />
               {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
@@ -119,11 +109,11 @@ const CreateAdmin = ({closeModal , fetchData}) => {
                 id="password"
                 name="password"
                 type="password"
-                autoComplete="new-password"
+                autoComplete="current-password"
                 required
                 className="appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-blue-500 focus:border-blue-500 focus:z-10 sm:text-sm"
-                placeholder="Enter password"
-                value={signupData.password}
+                placeholder="Enter your password"
+                value={loginData.password}
                 onChange={handleChange}
               />
               {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}
@@ -138,12 +128,19 @@ const CreateAdmin = ({closeModal , fetchData}) => {
             >
               {loading ? (
                 <div className="flex items-center">
-                  Creating Admin...
+                  <div className="spinner mr-2"></div>
+                  Login in...
                 </div>
               ) : (
-                "Create Admin"
+                "Log in"
               )}
             </button>
+            <p className="mt-2 text-center text-sm text-gray-600">
+            Or{" "}
+            <Link to="/signup" className="font-medium text-blue-600 hover:text-blue-500">
+              create a new account
+            </Link>
+          </p>
           </div>
         </div>
       </div>
@@ -151,4 +148,4 @@ const CreateAdmin = ({closeModal , fetchData}) => {
   );
 };
 
-export default CreateAdmin;
+export default Login;

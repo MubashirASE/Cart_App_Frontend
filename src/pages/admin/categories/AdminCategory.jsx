@@ -6,6 +6,10 @@ import { BiPencil } from "react-icons/bi";
 import { BsTrash2, BsToggleOff, BsToggleOn } from "react-icons/bs";
 import { FaPlus, FaFolderOpen } from "react-icons/fa";
 import API_URL from "../../../api/api.js";
+import PageHeader from "../../../components/common/PageHeader.jsx";
+import Table from "../../../components/common/Table.jsx";
+import Button from "../../../components/common/Button.jsx";
+import IconButton from "../../../components/common/IconButton.jsx";
 
 const AdminCategory = () => {
   const [categories, setCategories] = useState([]);
@@ -103,24 +107,95 @@ const AdminCategory = () => {
   const hierarchy = buildHierarchy(categories);
   const flatCategories = flattenHierarchy(hierarchy);
 
+  const tableHeaders = [
+    { label: "Category Name" },
+    { label: "Slug" },
+    { label: "Status", className: "text-center" },
+    { label: "Actions", className: "text-center" },
+  ];
+
+  const renderRow = (category) => (
+    <tr key={category._id} className="hover:bg-gray-50">
+      <td className="px-6 py-4 whitespace-nowrap">
+        <div className="flex items-center space-x-2">
+          {category.level > 0 && (
+            <span
+              className="flex items-center text-sm font-medium text-gray-900"
+              style={{ marginLeft: `${category.level * 24}px` }}
+            >
+              └─
+              <img
+                src={category.image}
+                alt={category.name}
+                className="w-5 h-5 object-cover rounded-lg ml-1"
+              />
+              <span className="ml-1">{category.name}</span>
+            </span>
+          )}
+          {category.level === 0 && (
+            <span className="flex items-center text-sm font-medium text-gray-900">
+              <img
+                src={category.image}
+                alt={category.name}
+                className="w-5 h-5 object-cover rounded-lg mr-1"
+              />
+              {category.name}
+            </span>
+          )}
+        </div>
+      </td>
+
+      <td className="px-6 py-4 whitespace-nowrap">
+        <span className="text-sm text-gray-500 font-mono">
+          {category.slug}
+        </span>
+      </td>
+      <td className="px-6 py-4 whitespace-nowrap text-center">
+        <span
+          className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${category.isActive
+              ? "bg-green-100 text-green-800"
+              : "bg-red-100 text-red-800"
+            }`}
+        >
+          {category.isActive ? "Active" : "Inactive"}
+        </span>
+      </td>
+      <td className="px-6 py-4 text-center space-x-2">
+        <IconButton
+          onClick={() => {
+            setSelectedCategory(category) || setOpenEditModal(true);
+            handleUpdate(category._id, category);
+          }}
+          icon={BiPencil}
+          variant="primary"
+        />
+        <IconButton
+          onClick={() => handleToggleStatus(category)}
+          icon={category.isActive ? BsToggleOn : BsToggleOff}
+          variant={category.isActive ? "success" : "danger"}
+        />
+        <IconButton
+          onClick={() => handleDelete(category)}
+          icon={BsTrash2}
+          variant="danger"
+        />
+      </td>
+    </tr>
+  );
+
   return (
     <div className="min-h-screen py-12 px-4 bg-gray-50">
-      <div className="flex justify-between items-center mb-6">
-        <div>
-          <h1 className="text-3xl font-extrabold text-blue-600 flex items-center gap-2">
-            Category Management
-          </h1>
-          <p className="mt-2 text-sm text-gray-600">
-            Manage product categories and hierarchies
-          </p>
-        </div>
-        <button
-          onClick={() => setOpenCreateModal(true)}
-          className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 rounded-lg"
-        >
-          <FaPlus /> Add Category
-        </button>
-      </div>
+      <PageHeader
+        title="Category Management"
+        subtitle="Manage product categories and hierarchies"
+        action={
+          <Button onClick={() => setOpenCreateModal(true)}>
+            <div className="flex items-center gap-2">
+              <FaPlus /> Add Category
+            </div>
+          </Button>
+        }
+      />
 
       <Modal open={openCreateModal} onClose={() => setOpenCreateModal(false)}>
         <AdminCategoryForm
@@ -157,104 +232,11 @@ const AdminCategory = () => {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Category Name
-                  </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Slug
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Status
-                  </th>
-                  <th className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
-                    Actions
-                  </th>
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {flatCategories.map((category) => (
-                  <tr key={category._id} className="hover:bg-gray-50">
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="flex items-center space-x-2">
-                        {category.level > 0 && (
-                          <span
-                            className="flex items-center text-sm font-medium text-gray-900"
-                            style={{ marginLeft: `${category.level * 24}px` }}
-                          >
-                            └─
-                            <img
-                              src={category.image}
-                              alt={category.name}
-                              className="w-5 h-5 object-cover rounded-lg ml-1"
-                            />
-                            <span className="ml-1">{category.name}</span>
-                          </span>
-                        )}
-                        {category.level === 0 && (
-                          <span className="flex items-center text-sm font-medium text-gray-900">
-                            <img
-                              src={category.image}
-                              alt={category.name}
-                              className="w-5 h-5 object-cover rounded-lg mr-1"
-                            />
-                            {category.name}
-                          </span>
-                        )}
-                      </div>
-                    </td>
-
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className="text-sm text-gray-500 font-mono">
-                        {category.slug}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">
-                      <span
-                        className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
-                          category.isActive
-                            ? "bg-green-100 text-green-800"
-                            : "bg-red-100 text-red-800"
-                        }`}
-                      >
-                        {category.isActive ? "Active" : "Inactive"}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 text-center space-x-2">
-                      <button
-                        onClick={() =>
-                          setSelectedCategory(category) ||
-                          setOpenEditModal(true)
-                        }
-                        className="inline-flex items-center px-2 py-2 text-sm font-medium text-blue-600 bg-blue-100 hover:bg-blue-200 rounded-lg"
-                      >
-                        <BiPencil />
-                      </button>
-                      <button
-                        onClick={() => handleToggleStatus(category)}
-                        className={`inline-flex items-center px-2 py-2 text-sm font-medium rounded-lg ${
-                          category.isActive
-                            ? "text-green-600 bg-green-100 hover:bg-green-200"
-                            : "text-red-600 bg-red-100 hover:bg-red-200"
-                        }`}
-                      >
-                        {category.isActive ? <BsToggleOn /> : <BsToggleOff />}
-                      </button>
-                      <button
-                        onClick={() => handleDelete(category)}
-                        className="inline-flex items-center px-2 py-2 text-sm font-medium text-red-500 bg-red-100 hover:bg-red-200 rounded-lg"
-                      >
-                        <BsTrash2 />
-                      </button>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <Table
+            headers={tableHeaders}
+            data={flatCategories}
+            renderRow={renderRow}
+          />
         )}
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Loader = ({ size = "md", color = "blue-600", text }) => {
+const Loader = ({ size = "md", color = "blue-500", text }) => {
     const sizes = {
         sm: "w-5 h-5 border-2",
         md: "w-8 h-8 border-4",

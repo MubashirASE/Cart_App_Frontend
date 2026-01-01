@@ -40,7 +40,6 @@ const Navbar = () => {
     localStorage.clear();
       setUser(null, null);        
   setCartItems([]);     
-
     navigate("/login");
     setIsProfileDropdownOpen(false);
   };
@@ -80,10 +79,16 @@ const Navbar = () => {
                   Home
                 </Link>
                 <Link
+                  to="/products"
+                  className={`px-3 py-2 rounded ${isActive("/products")}`}
+                >
+                  Products
+                </Link>
+                <Link
                   to="/contact"
                   className={`px-3 py-2 rounded ${isActive("/contant")}`}
                 >
-                  Contant
+                  Contact
                 </Link>
                 <Link
                   to="/about"
@@ -201,6 +206,12 @@ const Navbar = () => {
                   className={`px-3 py-2 rounded ${isActive("/")}`}
                 >
                   Home
+                </Link>
+                 <Link
+                  to="/products"
+                  className={`px-3 py-2 rounded ${isActive("/products")}`}
+                >
+                  Products
                 </Link>
                 <Link
                   to="/about"

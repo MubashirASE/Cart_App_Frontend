@@ -43,14 +43,6 @@ const Dashboard = () => {
 
           {userData?.user?.role === "superAdmin" && (
             <>
-              {/* <Link
-                to="/admin/adminCreated"
-                className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive(
-                  "/admin/adminCreated"
-                )}`}
-              >
-                Add Admin
-              </Link> */}
               <Link
                 to="/admin/adminDetails"
                 className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
@@ -71,14 +63,7 @@ const Dashboard = () => {
             <FaUsers />
             User Details
           </Link>
-          {/* <Link
-            to={userData?.role !== "user" ? "/admin/adminAllProduct" : "#"}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
-              "/admin/adminAllProduct"
-            )}`}
-          >
-           <FaShoppingBag />  Products
-          </Link> */}
+          
           <Link
             to={userData?.role !== "user" ? "/admin/adminMyProduct" : "#"}
             className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
@@ -87,14 +72,7 @@ const Dashboard = () => {
           >
             <FaShoppingBag /> Product
           </Link>
-          {/* <Link
-            to={userData?.role !== "user" ? "/admin/adminUpdateProduct" : "#"}
-            className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors ${isActive(
-              "/admin/adminUpdateProduct"
-            )}`}
-          >
-            Update Product
-          </Link> */}
+         
           <Link
             to={userData?.role !== "user" ? "/admin/adminCategory" : "#"}
             className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
