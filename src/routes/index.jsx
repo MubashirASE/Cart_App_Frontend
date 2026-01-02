@@ -3,22 +3,21 @@ import Home from "../pages/user/Home.jsx";
 import SignUp from "../pages/user/SignUp.jsx";
 import Login from "../pages/user/Login.jsx";
 import Dashboard from "../pages/admin/Dashboard.jsx";
-import AdminHome from "../pages/admin/AdminHome/AdminHome.jsx";
-import AllUserData from "../pages/admin/usersDetail/AllUserData.jsx";
-import AdminDetails from "../pages/admin/AdminDetails/AdminDetails.jsx";
+import AdminHome from "../pages/admin/AdminHome.jsx";
+import AllUserData from "../pages/admin/AllUserData.jsx";
+import AdminDetails from "../pages/admin/AdminDetails.jsx";
 import UsePaymentCart from "../pages/user/UsePaymentCart.jsx";
 import ProtectedRoute from "./ProtectedRoutes.jsx";
 import VerifyPage from "../pages/user/VerfiyPage.jsx";
-import AdminAddData from "../pages/admin/CreateAdmin/CreateAdmin.jsx";
-import AdminAllProduct from "../pages/admin/products/AllProduct/AllProduct.jsx";
-import AdminUpdateProduct from "../pages/admin/products/UpdateProduct/UpdateProduct.jsx";
-import AdminCreateProduct from "../pages/admin/products/CreateProduct/CreateProduct.jsx";
-import AdminMyProduct from "../pages/admin/products/MyProduct/MyProduct.jsx";
-import AdminCategory from "../pages/admin/categories/AdminCategory.jsx";
+import AdminAddData from "../pages/admin/CreateAdmin.jsx";
+import AdminAllProduct from "../pages/admin/products/AllProduct.jsx";
+import AdminUpdateProduct from "../pages/admin/products/UpdateProduct.jsx";
+import AdminCreateProduct from "../pages/admin/products/CreateProduct.jsx";
+import AdminMyProduct from "../pages/admin/products/MyProduct.jsx";
+import AdminCategory from "../pages/admin/AdminCategory.jsx";
 import ProfilePage from "../components/common/Profile.jsx";
 import AboutPage from "../pages/user/About.jsx";
-import MainLayout from "../layout/MainLayout.jsx";
-import CategoryWiseProduct from "../pages/user/CategoryWiseProduct.jsx";
+import MainLayout from "../components/layout/MainLayout.jsx";
 import CartList from "../pages/user/CartList.jsx";
 import ContactPage from "../pages/user/Contact.jsx";
 import Products from "../pages/user/Products.jsx";
@@ -95,15 +94,6 @@ const router = createBrowserRouter([
                     <ProtectedRoute userOnly={true}>
                         {" "}
                         <AboutPage />
-                    </ProtectedRoute>
-                ),
-            },
-            {
-                path: "categoryProducts/:id",
-                element: (
-                    <ProtectedRoute userOnly={true}>
-                        {" "}
-                        <CategoryWiseProduct />
                     </ProtectedRoute>
                 ),
             },

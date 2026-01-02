@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useCart } from "../../contextData/CartContext";
+import { useCart } from "../../contextData/useCart";
 import { toast } from "react-toastify";
 import API_URL from "../../api/api";
 
@@ -104,7 +104,7 @@ const ProfilePage = () => {
           onClick={handleUpdate}
           className={`w-full py-2 px-4 text-white font-semibold rounded-md ${
             loading ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
-          }`}
+            }`}
           disabled={loading}
         >
           {loading ? "Updating..." : "Update Profile"}

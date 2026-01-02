@@ -2,7 +2,7 @@ import { createContext, useContext, useState, useEffect } from "react";
 import API_URL from "../api/api.js";
 import { toast } from "react-toastify";
 
-const CartContext = createContext();
+import { CartContext } from "./useCart";
 const userJson = localStorage.getItem("user")
 const initialStates = {
   token: localStorage.getItem("token") ?? null,
@@ -106,5 +106,3 @@ export const CartProvider = ({ children }) => {
     </CartContext.Provider>
   );
 };
-
-export const useCart = () => useContext(CartContext);

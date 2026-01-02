@@ -1,6 +1,5 @@
 import React from "react";
 import { FaShoppingCart } from "react-icons/fa";
-import { toast } from "react-toastify";
 
 const ProductCard = ({ product, onAddToCart, onUpdate, userRole, isFlashSale = false }) => {
     const cardClass = isFlashSale
@@ -49,7 +48,7 @@ const ProductCard = ({ product, onAddToCart, onUpdate, userRole, isFlashSale = f
                     <div className="text-sm text-gray-600">
                         <span className="font-medium">Qty:</span> {product.quantity}
                     </div>
-                    <div className="text-lg font-bold text-blue-600">${product.price}</div>
+                    <div className="text-lg font-bold text-blue-600">Rs {product.price}</div>
                 </div>
 
                 {userRole !== "user" && onUpdate && (

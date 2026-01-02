@@ -1,16 +1,74 @@
-
-import { useEffect, useState } from "react";
-import useCartLogic from "../../hooks/useCartLogic";
+import React, { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { removeFromCart, updateCartQuantity } from "../../api/cart";
+import { useCart } from "../../contextData/useCart";
+import CartItem from "../../components/cart/CartItem";
+import CartSummary from "../../components/cart/CartSummary";
 
 const Cart = () => {
-  const {
-    cart,
-    cartItems,
-    removeFromCart,
-    increaseValue,
-    decreaseValue,
-    checkOut,
-  }=useCartLogic()
+  const { cart, cartItems, setCartItems, fetchCartItems } = useCart();
+  const navigate = useNavigate();
+
+  const handleRemoveFromCart = async (productId) => {
+    try {
+      await removeFromCart(productId);
+      setCartItems((prev) => prev.filter((item) => item?._id !== productId));
+      toast.success("Removed from cart", {
+        style: {
+          color: "green",
+          fontWeight: "600",
+          fontSize: "17px",
+          background: "#F7F7F7",
+        },
+      });
+    } catch (error) {
+      if (error.response?.status === 403) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
+
+  const increaseValue = async (id) => {
+    setCartItems((prev) =>
+      prev.map((item) => {
+        if (item.productId._id === id) {
+          const available = item.productId.quantity - item.quantity;
+          if (available >= 1) {
+            updateCartQuantity(item.productId._id, item.quantity + 1);
+            return { ...item, quantity: item.quantity + 1 };
+          }
+        }
+        return item;
+      })
+    );
+  };
+
+  const decreaseValue = async (id) => {
+    setCartItems((prev) =>
+      prev.map((item) => {
+        if (item.productId._id === id && item.quantity > 1) {
+          updateCartQuantity(item.productId._id, item.quantity - 1);
+          return { ...item, quantity: item.quantity - 1 };
+        }
+        return item;
+      })
+    );
+  };
+
+  useEffect(() => {
+    fetchCartItems();
+  }, []);
+
+  const checkOut = async () => {
+    try {
+      navigate("/usePaymentCart");
+    } catch (error) {
+      if (error.response?.status === 403) {
+        toast.error(error.response.data.message);
+      }
+    }
+  };
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 mt-10">
@@ -31,77 +89,21 @@ const Cart = () => {
             </div>
           ) : (
             cartItems.map((ele) => (
-              <div key={ele?._id || Math.random()} className="p-4 md:grid md:grid-cols-12 md:gap-4 md:items-center flex flex-col ">
-                <div className="col-span-5 font-medium text-gray-900 flex items-center justify-between md:justify-start">
-                  <span className="md:hidden text-gray-500 text-sm">Product:</span>
-                  <span className="truncate">{ele?.productId?.name || "Unknown Product"}</span>
-                </div>
-
-                <div className="col-span-2 text-center md:text-center flex items-center justify-between md:justify-center">
-                  <span className="md:hidden text-gray-500 text-sm">Price:</span>
-                  <span className="text-gray-900">${ele.productId?.price || 0}</span>
-                </div>
-
-                <div className="col-span-3 flex items-center justify-between md:justify-center">
-                  <span className="md:hidden text-gray-500 text-sm">Quantity:</span>
-                  <div className="flex items-center space-x-2">
-                    <button
-                      onClick={() => decreaseValue(ele.productId?._id)}
-                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
-                    >
-                      -
-                    </button>
-                    <span className="w-8 text-center font-medium">{ele.quantity}</span>
-                    <button
-                      onClick={() => increaseValue(ele.productId?._id)}
-                      className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center text-gray-600 transition-colors"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-
-                <div className="col-span-2 flex items-center justify-between md:justify-center space-x-4">
-                  <div className="text-sm">
-                    {(ele.productId?.quantity || 0) - ele.quantity <= 0 ? (
-                      <span className="text-red-500 font-medium">Out of stock</span>
-                    ) : (
-                      <span className="text-green-600 font-medium">In stock</span>
-                    )}
-                  </div>
-                  <button
-                    onClick={() => removeFromCart(ele?._id)}
-                    className="text-red-500 hover:text-red-700 transition-colors p-2 rounded-full hover:bg-red-50"
-                    title="Remove item"
-                  >
-                    x
-                  </button>
-                </div>
-              </div>
+              <CartItem
+                key={ele?._id || Math.random()}
+                item={ele}
+                increaseValue={increaseValue}
+                decreaseValue={decreaseValue}
+                removeFromCart={handleRemoveFromCart}
+              />
             ))
           )}
         </div>
       </div>
 
-      {cartItems.length > 0 && (
-        <div className="mt-12 flex justify-end">
-          <button
-            onClick={() => {
-              checkOut();
-            }}
-            className="bg-blue-600 text-white px-8 py-3 rounded-lg hover:bg-blue-700 transition-colors font-medium shadow-sm text-lg"
-          >
-            Checkout
-          </button>
-        </div>
-      )}
+      <CartSummary cartItems={cartItems} checkOut={checkOut} />
     </div>
   );
 };
 
 export default Cart;
-
-
-
-
-
