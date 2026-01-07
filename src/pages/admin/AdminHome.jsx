@@ -4,6 +4,7 @@ import { getProducts, getMyProducts } from "../../api/products";
 import { getAllUserData } from "../../api/admin";
 import PageHeader from "../../components/common/PageHeader.jsx";
 import Card from "../../components/common/Card.jsx";
+import { toast } from "react-toastify";
 
 export const AdminDetailPage = () => {
   const [Data, setData] = useState(0);
@@ -21,7 +22,7 @@ export const AdminDetailPage = () => {
       const userData = await getAllUserData();
       setMember(userData.data.length);
     } catch (error) {
-      console.error("Error fetching dashboard stats:", error);
+      toast.error(error.response?.data?.message || "Error deleting product");
     }
   };
 

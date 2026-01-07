@@ -1,6 +1,5 @@
-import { createContext, useContext, useState, useEffect } from "react";
+import {  useState, useEffect, useCallback } from "react";
 import API_URL from "../api/api.js";
-import { toast } from "react-toastify";
 
 import { CartContext } from "./useCart";
 const userJson = localStorage.getItem("user")
@@ -15,7 +14,7 @@ export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState();
   const [userData, setUserData] = useState(initialStates);
 
-  const setUser = (token, user) => {
+  const setUser = useCallback((token, user) => {
     console.log(token, user)
     setUserData({
       token,
@@ -28,9 +27,16 @@ export const CartProvider = ({ children }) => {
       localStorage.removeItem("token")
       localStorage.removeItem("user")
     }
-  }
+  }, []);
 
-  const fetchData = () => {
+  const logout = useCallback(() => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    setUserData({ token: null, user: null });
+    setCartItems([]);
+  }, []);
+
+  const fetchData = useCallback(() => {
     const token = localStorage.getItem("token");
     const user = JSON.parse(localStorage.getItem("user"));
 
@@ -38,10 +44,10 @@ export const CartProvider = ({ children }) => {
       token: token,
       user: user
     });
-  };
+  }, []);
 
 
-  const fetchCartItems = async () => {
+  const fetchCartItems = useCallback(async () => {
     if (!userData?.token) return;
     try {
       const res = await API_URL.get("/cart/");
@@ -57,7 +63,7 @@ export const CartProvider = ({ children }) => {
       console.error("Error fetching cart items:", error);
       setCartItems([]);
     }
-  };
+  }, [userData?.token]);
 
   useEffect(() => {
     if (userData?.token) {
@@ -65,13 +71,13 @@ export const CartProvider = ({ children }) => {
     } else {
       setCartItems([]);
     }
-  }, [userData?.token]);
+  }, [userData?.token, fetchCartItems]);
 
   useEffect(() => {
     fetchData()
-  }, []);
+  }, [fetchData]);
 
-  const addToCart = (product) => {
+  const addToCart = useCallback((product) => {
     console.log("Adding to cart:", product);
     setCartItems((prevCartItems) => {
       const existingItem = prevCartItems.find(
@@ -89,7 +95,9 @@ export const CartProvider = ({ children }) => {
       }
       return prevCartItems;
     });
-  };
+  }, []);
+
+
   return (
     <CartContext.Provider
       value={{
@@ -99,7 +107,8 @@ export const CartProvider = ({ children }) => {
         setCartItems,
         fetchCartItems,
         userData,
-        setUser
+        setUser,
+        logout
       }}
     >
       {children}

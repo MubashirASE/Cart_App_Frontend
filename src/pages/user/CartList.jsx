@@ -7,7 +7,7 @@ import CartItem from "../../components/cart/CartItem";
 import CartSummary from "../../components/cart/CartSummary";
 
 const Cart = () => {
-  const { cart, cartItems, setCartItems, fetchCartItems } = useCart();
+  const { cartItems, setCartItems, fetchCartItems } = useCart();
   const navigate = useNavigate();
 
   const handleRemoveFromCart = async (productId) => {
@@ -22,10 +22,9 @@ const Cart = () => {
           background: "#F7F7F7",
         },
       });
-    } catch (error) {
-      if (error.response?.status === 403) {
-        toast.error(error.response.data.message);
-      }
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error deleting product");
+      
     }
   };
 
@@ -62,11 +61,10 @@ const Cart = () => {
 
   const checkOut = async () => {
     try {
-      navigate("/usePaymentCart");
-    } catch (error) {
-      if (error.response?.status === 403) {
-        toast.error(error.response.data.message);
-      }
+      navigate("/payment-cart");
+    } catch (err) {
+      toast.error(err.response?.data?.message );
+      
     }
   };
 

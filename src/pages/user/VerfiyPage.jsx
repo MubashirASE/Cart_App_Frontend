@@ -18,13 +18,9 @@ const VerifyPage = () => {
     setLoading(true);
     try {
       const data = await verifyOtp(email, otp);
-      if (data.success) {
         setUser(data.token, data.userData);
         toast.success(data.message);
         navigate(data.userData.role === "user" ? "/" : "/admin");
-      } else {
-        toast.error(data.message);
-      }
     } catch (err) {
       toast.error(err.response?.data?.message || "Verification failed");
     } finally {
@@ -36,11 +32,7 @@ const VerifyPage = () => {
     if (!email) return toast.error("Email not available!");
     try {
       const data = await resendVerification(email);
-      if (data.success) {
-        toast.success(data.message);
-      } else {
-        toast.error(data.message);
-      }
+      toast.success(data.message);
     } catch (err) {
       toast.error(err.response?.data?.message || "Failed to resend OTP");
     }

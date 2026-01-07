@@ -21,8 +21,6 @@ const CategoryFilter = ({ selectedCategory, onCategorySelect }) => {
             setLoading(false);
         }
     };
-
-    // Build hierarchical structure
     const buildHierarchy = (cats, parentId = null) => {
         return cats
             .filter(cat => {

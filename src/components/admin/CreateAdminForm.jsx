@@ -2,7 +2,7 @@ import React from "react";
 import Input from "../common/Input.jsx";
 import Button from "../common/Button.jsx";
 
-const CreateAdminForm = ({ signupData, errors, loading, onChange, onSubmit }) => {
+const CreateAdminForm = ({ adminData, errors, loading, onChange, onSubmit }) => {
     return (
         <div className="max-w-md w-full space-y-8 p-8 rounded-xl ">
             <div>
@@ -23,7 +23,7 @@ const CreateAdminForm = ({ signupData, errors, loading, onChange, onSubmit }) =>
                             type="text"
                             required
                             placeholder="Enter admin name"
-                            value={signupData.name}
+                            value={adminData.name}
                             onChange={onChange}
                         />
                         {errors.name && <p className="mt-1 text-sm text-red-600">{errors.name}</p>}
@@ -37,7 +37,7 @@ const CreateAdminForm = ({ signupData, errors, loading, onChange, onSubmit }) =>
                             autoComplete="email"
                             required
                             placeholder="Enter admin email"
-                            value={signupData.email}
+                            value={adminData.email}
                             onChange={onChange}
                         />
                         {errors.email && <p className="mt-1 text-sm text-red-600">{errors.email}</p>}
@@ -51,7 +51,7 @@ const CreateAdminForm = ({ signupData, errors, loading, onChange, onSubmit }) =>
                             autoComplete="new-password"
                             required
                             placeholder="Enter password"
-                            value={signupData.password}
+                            value={adminData.password}
                             onChange={onChange}
                         />
                         {errors.password && <p className="mt-1 text-sm text-red-600">{errors.password}</p>}

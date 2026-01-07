@@ -3,6 +3,7 @@ import Button from "../common/Button";
 import ProductCard from "../common/ProductCard";
 import ScrollButtons from "../common/ScrollButtons";
 import SectionHeader from "../common/SectionHeader";
+import { useNavigate } from "react-router-dom";
 
 const FlashSalesSection = ({
   data,
@@ -11,6 +12,7 @@ const FlashSalesSection = ({
 }) => {
   const [showAllFlashSales, setShowAllFlashSales] = useState(false);
   const flashSalesScrollRef = useRef(null);
+  const navigate = useNavigate();
 
   const scrollFlashSales = (direction) => {
     if (flashSalesScrollRef.current) {
@@ -45,7 +47,7 @@ const FlashSalesSection = ({
           ))}
         </div>
       ) : (
-        <div ref={flashSalesScrollRef} className="flex overflow-x-auto gap-6">
+        <div ref={flashSalesScrollRef} className="flex overflow-x-auto gap-6 scrollbar-hide p-1">
           {data.map(ele => (
             <ProductCard
               key={ele._id}
@@ -59,8 +61,11 @@ const FlashSalesSection = ({
       )}
 
       <div className="flex justify-center">
-        <Button onClick={() => setShowAllFlashSales(!showAllFlashSales)}>
-          {showAllFlashSales ? "Less Show All Products" : "View All Products"}
+        <Button onClick={() => {
+          setShowAllFlashSales(!showAllFlashSales)
+          navigate("/products")
+        }}>
+          View All Products
         </Button>
       </div>
     </div>

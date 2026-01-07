@@ -28,8 +28,8 @@ const HomeUI = () => {
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
       );
       setData(sortedData);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error deleting product");
     }
   };
 
@@ -70,7 +70,6 @@ const HomeUI = () => {
       setCategories(Array.isArray(categoriesData) ? categoriesData : []);
     } catch (error) {
       toast.error(error.message || "Error fetching categories");
-      console.error("Error fetching categories:", error);
     } finally {
       setloading(false);
     }

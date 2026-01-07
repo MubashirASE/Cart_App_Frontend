@@ -37,9 +37,9 @@ const AdminSidebar = ({ userData }) => {
 
                 {userData?.user?.role === "superAdmin" && (
                     <Link
-                        to="/admin/adminDetails"
+                        to="/admin/details"
                         className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
-                            "/admin/adminDetails"
+                            "/admin/details"
                         )}`}
                     >
                         <FaUserCog /> Admin Details
@@ -57,18 +57,18 @@ const AdminSidebar = ({ userData }) => {
                 </Link>
 
                 <Link
-                    to={userData?.role !== "user" ? "/admin/adminMyProduct" : "#"}
+                    to={userData?.role !== "user" ? "/admin/products" : "#"}
                     className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
-                        "/admin/adminMyProduct"
+                        "/admin/products"
                     )}`}
                 >
                     <FaShoppingBag /> Product
                 </Link>
 
                 <Link
-                    to={userData?.role !== "user" ? "/admin/adminCategory" : "#"}
+                    to={userData?.role !== "user" ? "/admin/categories" : "#"}
                     className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
-                        "/admin/adminCategory"
+                        "/admin/categories"
                     )}`}
                 >
                     <FaFolderOpen /> Category Management

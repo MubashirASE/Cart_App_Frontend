@@ -6,7 +6,10 @@ import {
   toggleCategoryStatus,
 } from "../../api/categories";
 import Modal from "../../components/common/popup.jsx";
-import AdminCategoryForm from "./AdminCategoryForm.jsx";
+import AdminCategoryForm from "../../components/admin/AdminCategoryForm.jsx";
+import UpdateCategoryForm from "../../components/admin/UpdateCategoryForm.jsx";
+import ConfirmationModal from "../../components/common/ConfirmationModal.jsx";
+
 import { FaPlus, FaFolderOpen } from "react-icons/fa";
 import PageHeader from "../../components/common/PageHeader.jsx";
 import Button from "../../components/common/Button.jsx";
@@ -18,6 +21,8 @@ const AdminCategory = () => {
   const [openCreateModal, setOpenCreateModal] = useState(false);
   const [openEditModal, setOpenEditModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [categoryToDelete, setCategoryToDelete] = useState(null);
 
   const fetchCategories = async () => {
     setLoading(true);
@@ -35,11 +40,19 @@ const AdminCategory = () => {
     fetchCategories();
   }, []);
 
-  const handleDelete = async (category) => {
+  const handleDelete = (category) => {
+    setCategoryToDelete(category);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!categoryToDelete) return;
     try {
-      await deleteCategory(category._id);
+      await deleteCategory(categoryToDelete._id);
       toast.success("Category deleted successfully!");
       fetchCategories();
+      setDeleteModalOpen(false);
+      setCategoryToDelete(null);
     } catch (error) {
       toast.error(error.response?.data?.message || "Error deleting category");
     }
@@ -48,10 +61,18 @@ const AdminCategory = () => {
   const handleToggleStatus = async (category) => {
     try {
       await toggleCategoryStatus(category._id);
-      toast.success(
-        `Category ${category.isActive ? "disabled" : "enabled"} successfully!`
+      const isNowActive = !category.isActive;
+      setCategories((prev) =>
+        prev.map((cat) =>
+          cat._id === category._id ? { ...cat, isActive: isNowActive } : cat
+        )
       );
-      fetchCategories();
+
+      if (isNowActive) {
+        toast.success(`Category enabled successfully!`);
+      } else {
+        toast.error(`Category disabled successfully!`);
+      }
     } catch (error) {
       toast.error(
         error.response?.data?.message || "Error toggling category status"
@@ -112,7 +133,7 @@ const AdminCategory = () => {
 
       <Modal open={openEditModal} onClose={() => setOpenEditModal(false)}>
         {selectedCategory && (
-          <AdminCategoryForm
+          <UpdateCategoryForm
             categoryData={selectedCategory}
             closeModal={() => setOpenEditModal(false)}
             onCategoryAdded={fetchCategories}
@@ -120,6 +141,15 @@ const AdminCategory = () => {
           />
         )}
       </Modal>
+
+      <ConfirmationModal
+        open={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Delete Category"
+        message="Are you sure you want to delete this category?"
+        itemName={categoryToDelete?.name}
+      />
 
       <div className="mt-6 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {loading ? (

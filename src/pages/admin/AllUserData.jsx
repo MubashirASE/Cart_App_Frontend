@@ -31,7 +31,7 @@ const AllUserData = () => {
       const cartData = await getAllUserCart();
       setCart(cartData.cart);
     } catch (error) {
-      console.error(error);
+      toast.error(error.response?.data?.message || "Error fetching user data");
     } finally {
       setLoading(false);
     }

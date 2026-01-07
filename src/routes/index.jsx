@@ -6,14 +6,14 @@ import Dashboard from "../pages/admin/Dashboard.jsx";
 import AdminHome from "../pages/admin/AdminHome.jsx";
 import AllUserData from "../pages/admin/AllUserData.jsx";
 import AdminDetails from "../pages/admin/AdminDetails.jsx";
-import UsePaymentCart from "../pages/user/UsePaymentCart.jsx";
+import PaymentCart from "../pages/user/PaymentCart.jsx";
 import ProtectedRoute from "./ProtectedRoutes.jsx";
 import VerifyPage from "../pages/user/VerfiyPage.jsx";
-import AdminAddData from "../pages/admin/CreateAdmin.jsx";
-import AdminAllProduct from "../pages/admin/products/AllProduct.jsx";
-import AdminUpdateProduct from "../pages/admin/products/UpdateProduct.jsx";
-import AdminCreateProduct from "../pages/admin/products/CreateProduct.jsx";
-import AdminMyProduct from "../pages/admin/products/MyProduct.jsx";
+import AdminAddData from "../components/admin/CreateAdmin.jsx";
+import AdminAllProduct from "../components/admin/AllProduct.jsx";
+import AdminUpdateProduct from "../components/admin/UpdateProduct.jsx";
+import AdminCreateProduct from "../components/admin/CreateProduct.jsx";
+// import AdminMyProduct from "../pages/admin/MyProduct.jsx";
 import AdminCategory from "../pages/admin/AdminCategory.jsx";
 import ProfilePage from "../components/common/Profile.jsx";
 import AboutPage from "../pages/user/About.jsx";
@@ -21,6 +21,7 @@ import MainLayout from "../components/layout/MainLayout.jsx";
 import CartList from "../pages/user/CartList.jsx";
 import ContactPage from "../pages/user/Contact.jsx";
 import Products from "../pages/user/Products.jsx";
+import AdminProduct from "../pages/admin/AdminProduct.jsx";
 
 const router = createBrowserRouter([
     {
@@ -43,21 +44,21 @@ const router = createBrowserRouter([
                 path: "cart",
                 element: (
                     <ProtectedRoute userOnly={true}>
-                        {" "}
+
                         <CartList />
                     </ProtectedRoute>
                 ),
             },
             {
-                path: "usePaymentCart",
+                path: "payment-cart",
                 element: (
                     <ProtectedRoute userOnly={true}>
                         {" "}
-                        <UsePaymentCart />
+                        <PaymentCart />
                     </ProtectedRoute>
                 ),
             },
-            
+
             {
                 path: "products",
                 element: (
@@ -77,7 +78,13 @@ const router = createBrowserRouter([
             },
             {
                 path: "contact",
-                element: <ContactPage />,
+                element:
+                    (
+                        <ProtectedRoute userOnly={true}>
+                            {" "}
+                            <ContactPage />
+                        </ProtectedRoute>
+                    ),
             },
             {
                 path: "profile",
@@ -115,7 +122,7 @@ const router = createBrowserRouter([
                         element: <AllUserData />,
                     },
                     {
-                        path: "adminDetails",
+                        path: "details",
                         element: <AdminDetails />,
                     },
                     {
@@ -135,11 +142,11 @@ const router = createBrowserRouter([
                         element: <AdminCreateProduct />,
                     },
                     {
-                        path: "adminMyProduct",
-                        element: <AdminMyProduct />,
+                        path: "products",
+                        element: <AdminProduct/>,
                     },
                     {
-                        path: "adminCategory",
+                        path: "categories",
                         element: <AdminCategory />,
                     },
                     {

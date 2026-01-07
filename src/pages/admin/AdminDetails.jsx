@@ -3,7 +3,7 @@ import { getAllAdminData, blockUser, unblockUser } from "../../api/admin";
 import { getProducts } from "../../api/products";
 import { toast } from "react-toastify";
 import Modal from "../../components/common/popup.jsx";
-import CreateAdmin from "./CreateAdmin.jsx";
+import CreateAdmin from "../../components/admin/CreateAdmin.jsx";
 import PageHeader from "../../components/common/PageHeader.jsx";
 import Table from "../../components/common/Table.jsx";
 import Button from "../../components/common/Button.jsx";
@@ -19,23 +19,22 @@ const AdminDetails = () => {
     try {
       const adminData = await getAllAdminData();
       setMember(adminData.data);
-
       const products = await getProducts();
       setProduct(products);
     } catch (error) {
-      console.error("Error fetching admin details:", error);
+      toast.error(error.response?.data?.message || "Error deleting product");
     }
   };
-
   const handleBlock = async (userId, currentStatus) => {
     try {
       let res;
       if (!currentStatus) {
         res = await blockUser(userId);
-        toast.success(res.message);
+        console.log(res)
+        toast.error("Admin Blocked Successfully!");
       } else {
         res = await unblockUser(userId);
-        toast.success(res.message);
+        toast.success("Admin Unblocked Successfully!");
       }
 
       setMember((prev) =>
@@ -89,6 +88,7 @@ const AdminDetails = () => {
       <Modal open={openCreateModal} onClose={() => setOpenCreateModal(false)}>
         <CreateAdmin
           closeModal={() => setOpenCreateModal(false)}
+          fetchData={fetchData}
         />
       </Modal>
       {loading ? (

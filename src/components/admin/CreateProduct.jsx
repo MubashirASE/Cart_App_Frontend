@@ -1,10 +1,10 @@
 import React, { useEffect, useReducer } from "react";
-import { createProduct } from "../../../api/products";
-import { getAllCategories } from "../../../api/categories";
+import { createProduct } from "../../api/products";
+import { getAllCategories } from "../../api/categories";
 import { toast } from "react-toastify";
-import Input from "../../../components/common/Input";
-import Button from "../../../components/common/Button";
-import PageHeader from "../../../components/common/PageHeader.jsx";
+import Input from "../common/Input";
+import Button from "../common/Button";
+import PageHeader from "../common/PageHeader.jsx";
 
 const initialState = {
   name: "",

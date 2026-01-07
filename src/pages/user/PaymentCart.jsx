@@ -42,12 +42,9 @@ const UsePaymentCart = () => {
         totalAmount: calculateTotal(),
       };
       const data = await placeOrder(orderData);
-      if (data.success) {
-        toast.success("Order placed successfully!");
-        navigate("/");
-      } else {
-        toast.error("Failed to place order");
-      }
+      toast.success(data.message);
+      navigate("/");
+      
     } catch (err) {
       toast.error(err.response?.data?.message || "Something went wrong");
     }

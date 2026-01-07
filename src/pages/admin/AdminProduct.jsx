@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { getMyProducts, deleteProduct } from "../../../api/products";
+import { getMyProducts, deleteProduct } from "../../api/products";
 import { toast } from "react-toastify";
-import { useCart } from "../../../contextData/useCart";
-import Modal from "../../../components/common/popup.jsx";
-import AdminCreateProduct from "./CreateProduct.jsx";
-import AdminUpdateProduct from "./UpdateProduct.jsx";
-import PageHeader from "../../../components/common/PageHeader.jsx";
-import Button from "../../../components/common/Button.jsx";
-import ProductTable from "../../../components/admin/ProductTable.jsx";
+import { useCart } from "../../contextData/useCart";
+import Modal from "../../components/common/popup.jsx";
+import AdminCreateProduct from "../../components/admin/CreateProduct.jsx";
+import AdminUpdateProduct from "../../components/admin/UpdateProduct.jsx";
+import PageHeader from "../../components/common/PageHeader.jsx";
+import Button from "../../components/common/Button.jsx";
+import ProductTable from "../../components/admin/ProductTable.jsx";
+import ConfirmationModal from "../../components/common/ConfirmationModal.jsx";
 
-const MyProduct = () => {
+const AdminProduct = () => {
   const { userData } = useCart();
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,8 @@ const MyProduct = () => {
   const [openUpdateModal, setOpenUpdateModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showAllProducts, setShowAllProducts] = useState(false);
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [productToDelete, setProductToDelete] = useState(null);
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -27,7 +30,7 @@ const MyProduct = () => {
         : res.filter((e) => e.user._id === userData?.user?.id);
       setData(filtered);
     } catch (err) {
-      console.error(err);
+      toast.error(err.response?.data?.message || "Error deleting product");
     } finally {
       setLoading(false);
     }
@@ -42,11 +45,19 @@ const MyProduct = () => {
     setOpenUpdateModal(true);
   };
 
-  const handleDelete = async (product) => {
+  const handleDelete = (product) => {
+    setProductToDelete(product);
+    setDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    if (!productToDelete) return;
     try {
-      const res = await deleteProduct(product._id);
+      const res = await deleteProduct(productToDelete._id);
       toast.success(res.message || "Product deleted successfully!");
       fetchProducts();
+      setDeleteModalOpen(false);
+      setProductToDelete(null);
     } catch (err) {
       toast.error(err.response?.data?.message || "Error deleting product");
     }
@@ -86,6 +97,15 @@ const MyProduct = () => {
         )}
       </Modal>
 
+      <ConfirmationModal
+        open={deleteModalOpen}
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={confirmDelete}
+        title="Delete Product"
+        message="Are you sure you want to delete this product?"
+        itemName={productToDelete?.name}
+      />
+
       <div className=" bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
         {loading ? (
           <div className="flex justify-center items-center h-64">
@@ -111,4 +131,4 @@ const MyProduct = () => {
   );
 };
 
-export default MyProduct;
+export default AdminProduct;

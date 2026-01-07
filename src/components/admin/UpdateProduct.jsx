@@ -1,9 +1,9 @@
 import React, { useReducer, useEffect } from "react";
-import { updateProduct } from "../../../api/products";
-import { getAllCategories } from "../../../api/categories";
+import { updateProduct } from "../../api/products";
+import { getAllCategories } from "../../api/categories";
 import { toast } from "react-toastify";
-import Input from "../../../components/common/Input";
-import SkeletonLoader from "../../../components/common/SkeletonLoader";
+import Input from "../common/Input";
+import SkeletonLoader from "../common/SkeletonLoader";
 
 const initialState = {
   name: "",
@@ -88,24 +88,31 @@ const UpdateProduct = ({ closeModal, onProductAdded, productData }) => {
   }, [productData]);
 
   useEffect(() => {
-    if (productData && categories.length > 0) {
-      const catId = productData.category?._id || productData.category;
-      const fullCategory = categories.find((c) => c._id === catId);
+    if (!productData || categories.length === 0) return;
 
-      if (fullCategory) {
-        if (fullCategory.parent) {
-          const parentId = fullCategory.parent._id || fullCategory.parent;
-          dispatch({
-            type: "SET_CATEGORY_SELECTION",
-            payload: { parent: parentId, child: fullCategory._id },
-          });
-        } else {
-          dispatch({
-            type: "SET_CATEGORY_SELECTION",
-            payload: { parent: fullCategory._id, child: "" },
-          });
-        }
-      }
+    const catId = productData.category?._id || productData.category;
+    const fullCategory = categories.find((c) => c._id === catId);
+    if (!fullCategory) return;
+
+    if (fullCategory.parent) {
+      const parentId = fullCategory.parent._id || fullCategory.parent;
+      dispatch({
+        type: "SET_PARENT_CATEGORY",
+        payload: parentId,
+      });
+      dispatch({
+        type: "SET_CHILD_CATEGORY",
+        payload: fullCategory._id,
+      });
+    } else {
+      dispatch({
+        type: "SET_PARENT_CATEGORY",
+        payload: fullCategory._id,
+      });
+      dispatch({
+        type: "SET_CHILD_CATEGORY",
+        payload: "",
+      });
     }
   }, [productData, categories]);
 
@@ -118,7 +125,7 @@ const UpdateProduct = ({ closeModal, onProductAdded, productData }) => {
           payload: data || [],
         });
       } catch (error) {
-        toast.error("Error fetching categories");
+        toast.error("Error fetching categories", error);
       } finally {
         dispatch({ type: "SET_LOADING", payload: false });
       }
@@ -181,19 +188,45 @@ const UpdateProduct = ({ closeModal, onProductAdded, productData }) => {
   return (
     <div className="p-4">
       <div className="flex justify-center items-center flex-col pb-5">
-        <h1 className="text-3xl font-extrabold text-blue-600">Update Product</h1>
-        <p className="mt-2 text-sm text-gray-400">Modify product details below</p>
+        <h1 className="text-3xl font-extrabold text-blue-600">
+          Update Product
+        </h1>
+        <p className="mt-2 text-sm text-gray-400">
+          Modify product details below
+        </p>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-2 w-full">
         <div className="space-y-2">
-          <Input label="Name" type="text" value={name} onChange={(e) => setName(e.target.value)} />
-          <Input label="Price" type="number" value={price} onChange={(e) => setPrice(e.target.value)} />
-          <Input label="Quantity" type="number" value={quantity} onChange={(e) => setQuantity(e.target.value)} />
-          <Input label="Serial Number" type="text" value={serial_number} onChange={(e) => setSerialNumber(e.target.value)} />
+          <Input
+            label="Name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          <Input
+            label="Price"
+            type="number"
+            value={price}
+            onChange={(e) => setPrice(e.target.value)}
+          />
+          <Input
+            label="Quantity"
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+          />
+          <Input
+            label="Serial Number"
+            type="text"
+            value={serial_number}
+            onChange={(e) => setSerialNumber(e.target.value)}
+          />
 
           <div className="flex flex-col mt-4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Category
+            </label>
             <select
               value={selectedParentCategory}
               onChange={(e) => {
@@ -204,7 +237,9 @@ const UpdateProduct = ({ closeModal, onProductAdded, productData }) => {
             >
               <option value="">-- Select Parent Category --</option>
               {parentCategories.map((parent) => (
-                <option key={parent._id} value={parent._id}>{parent.name}</option>
+                <option key={parent._id} value={parent._id}>
+                  {parent.name}
+                </option>
               ))}
             </select>
 
@@ -216,7 +251,9 @@ const UpdateProduct = ({ closeModal, onProductAdded, productData }) => {
               >
                 <option value="">-- Select Child Category --</option>
                 {childCategories.map((child) => (
-                  <option key={child._id} value={child._id}>{child.name}</option>
+                  <option key={child._id} value={child._id}>
+                    {child.name}
+                  </option>
                 ))}
               </select>
             )}
@@ -224,18 +261,29 @@ const UpdateProduct = ({ closeModal, onProductAdded, productData }) => {
         </div>
 
         <div className="space-y-4">
-          <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+          <label className="block text-sm font-medium text-gray-700 mb-1">
+            Product Image
+          </label>
           <input
             type="file"
             onChange={handleImageChange}
             className="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
           />
-          {preview && <img src={preview} alt="preview" className="w-70 h-60 object-cover rounded-lg" />}
+          {preview && (
+            <img
+              src={preview}
+              alt="preview"
+              className="w-70 h-60 object-cover rounded-lg"
+            />
+          )}
         </div>
       </div>
 
       <div className="flex justify-center mt-10">
-        <button onClick={handleUpdate} className="w-full md:w-1/2 py-2 px-8 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg" >
+        <button
+          onClick={handleUpdate}
+          className="w-full md:w-1/2 py-2 px-8 bg-blue-500 hover:bg-blue-600 text-white font-semibold rounded-lg"
+        >
           Update Product
         </button>
       </div>

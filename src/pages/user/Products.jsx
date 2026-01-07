@@ -55,8 +55,8 @@ const Products = () => {
         data = res.products || res;
       }
       setProducts(data);
-    } catch (error) {
-      toast.error("Failed to load products");
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error deleting product");
     } finally {
       setLoading(false);
     }
@@ -71,9 +71,8 @@ const Products = () => {
     try {
       const categories = await getAllCategories();
       setAllCategory(Array.isArray(categories) ? categories : []);
-    } catch (error) {
-      toast.error(error.message || "Error fetching categories");
-      console.error("Error fetching categories:", error);
+    } catch (err) {
+      toast.error(err.response?.data?.message || "Error deleting product");
     }
   };
 

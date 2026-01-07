@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { signup } from "../../api/auth";
 import { toast } from "react-toastify";
-import { useNavigate } from "react-router-dom";
-import CreateAdminForm from "../../components/admin/CreateAdminForm.jsx";
+import CreateAdminForm from "./CreateAdminForm.jsx";
+import { createAdmin } from "../../api/admin.js";
 
 const CreateAdmin = ({ closeModal, fetchData }) => {
-  const [signupData, setSignUpData] = useState({
+  const [adminData, setAdminData] = useState({
     name: "",
     email: "",
     password: "",
@@ -13,26 +13,25 @@ const CreateAdmin = ({ closeModal, fetchData }) => {
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
 
   const validateForm = () => {
     let newErrors = {};
-    if (!signupData.name) {
+    if (!adminData.name) {
       newErrors.name = "Name is required";
     }
-    if (!signupData.email) {
+    if (!adminData.email) {
       newErrors.email = "Email is required";
-    } else if (!/\S+@\S+\.\S+/.test(signupData.email)) {
+    } else if (!/\S+@\S+\.\S+/.test(adminData.email)) {
       newErrors.email = "Email address is invalid";
     }
 
-    if (!signupData.password) {
+    if (!adminData.password) {
       newErrors.password = "Password is required";
-    } else if (signupData.password.length < 8) {
+    } else if (adminData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters long";
-    } else if (!/[A-Z]/.test(signupData.password)) {
+    } else if (!/[A-Z]/.test(adminData.password)) {
       newErrors.password = "Password must be at least 1 uppercase";
-    } else if (!/[!@#$%^&*(),?":;{}|<>]/.test(signupData.password)) {
+    } else if (!/[!@#$%^&*(),?":;{}|<>]/.test(adminData.password)) {
       newErrors.password = "Password must be at least 1 special character";
     }
 
@@ -41,8 +40,8 @@ const CreateAdmin = ({ closeModal, fetchData }) => {
   };
 
   const handleChange = (e) => {
-    setSignUpData({
-      ...signupData,
+    setAdminData({
+      ...adminData,
       [e.target.name]: e.target.value,
     });
   };
@@ -52,16 +51,11 @@ const CreateAdmin = ({ closeModal, fetchData }) => {
     setLoading(true);
 
     try {
-      const data = await signup(signupData);
-
-      if (data.success) {
-        toast.success(data.message || "Admin created successfully!");
-        navigate("/admin/adminDetails");
-        closeModal();
-        if (fetchData) fetchData();
-      } else {
-        toast.error(data.message);
-      }
+       await createAdmin(adminData);
+      toast.success("Admin created successfully!");
+      closeModal();
+        fetchData()
+      
     } catch (err) {
       console.error(err);
       toast.error(err.response?.data?.message || "Admin creation failed");
@@ -72,7 +66,7 @@ const CreateAdmin = ({ closeModal, fetchData }) => {
 
   return (
     <CreateAdminForm
-      signupData={signupData}
+      adminData={adminData}
       errors={errors}
       loading={loading}
       onChange={handleChange}
