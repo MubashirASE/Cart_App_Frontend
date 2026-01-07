@@ -1,13 +1,20 @@
 /* Spinner Animation */
 .spinner {
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #333;
+  border: 2px solid #0987f5;
+  border-top: 2px solid #f9f7f7;
   border-radius: 50%;
-  width: 14px;
-  height: 14px;
+  width: 30px;
+  height: 30px;
   animation: spin 0.6s linear infinite;
   display: inline-block;
   margin-right: 8px;
+  font-weight: 400;
+}
+
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 @keyframes spin {
@@ -24,4 +31,28 @@
 .custom-toast {
   color: orange !important;
   background-color: #f3f3f3;
+}
+
+@keyframes popupAnimation {
+  0% {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.animate-popup {
+  animation: popupAnimation 0.25s ease-out forwards;
+}
+
+/* component CSS */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }

@@ -1,0 +1,26 @@
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { useCart } from "../../contextData/useCart";
+
+const VerifySuccess = () => {
+  const navigate = useNavigate();
+  const { setUser } = useCart();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token");
+    const userData = JSON.parse(localStorage.getItem("tempUserData"));
+    if (token) {
+      setUser(token, userData);
+      navigate("/home");
+    }
+  }, [setUser, navigate]);
+
+  return (
+    <div className="min-h-screen flex justify-center items-center">
+      <h2 className="text-2xl font-bold text-blue-500">Email verified! Redirecting...</h2>
+    </div>
+  );
+};
+
+export default VerifySuccess;
