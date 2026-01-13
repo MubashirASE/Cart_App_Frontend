@@ -11,7 +11,6 @@ const ProductsLayout = ({
   products,
   loading,
   loadingText,
-  allCategory,
   selectedCategories,
   tempSelectedCategories,
   sortOrder,
@@ -29,7 +28,7 @@ const ProductsLayout = ({
   const shouldShowSelectedCategories = selectedCategories.length > 0;
 
   return (
-    <div className="max-w-7xl mx-auto px-6 py-8">
+    <div className="max-w-7xl mx-auto sm:px-6 sm:py-8 p-2 py-8">
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <Loader size="lg" text={loadingText} />

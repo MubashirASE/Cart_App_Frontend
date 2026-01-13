@@ -24,11 +24,11 @@ const FlashSalesSection = ({
   };
 
   return (
-    <div className="space-y-5 px-5">
+    <div className="space-y-5 sm:px-5">
       <SectionHeader title="Today's" />
 
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-semibold">Flash Sales</h2>
+      <div className="flex justify-between items-center p-2">
+        <h2 className="text-xl sm:text-3xl font-semibold">Flash Sales</h2>
         <ScrollButtons
           onLeftClick={() => scrollFlashSales("left")}
           onRightClick={() => scrollFlashSales("right")}
@@ -36,7 +36,7 @@ const FlashSalesSection = ({
       </div>
 
       {showAllFlashSales ? (
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 sm:gap-6">
           {data.map(ele => (
             <ProductCard
               key={ele._id}
@@ -46,8 +46,9 @@ const FlashSalesSection = ({
             />
           ))}
         </div>
+
       ) : (
-        <div ref={flashSalesScrollRef} className="flex overflow-x-auto gap-6 scrollbar-hide p-1">
+        <div ref={flashSalesScrollRef} className="flex overflow-x-auto sm:gap-6 gap-2 scrollbar-hide p-2">
           {data.map(ele => (
             <ProductCard
               key={ele._id}

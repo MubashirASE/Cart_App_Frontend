@@ -47,9 +47,9 @@ const AdminSidebar = ({ userData }) => {
                 )}
 
                 <Link
-                    to={userData?.role !== "user" ? "/admin/adminUser" : "#"}
+                    to={userData?.role !== "user" ? "/admin/users" : "#"}
                     className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
-                        "/admin/adminUser"
+                        "/admin/users"
                     )}`}
                 >
                     <FaUsers />
@@ -62,7 +62,7 @@ const AdminSidebar = ({ userData }) => {
                         "/admin/products"
                     )}`}
                 >
-                    <FaShoppingBag /> Product
+                    <FaShoppingBag /> Products
                 </Link>
 
                 <Link
@@ -72,6 +72,15 @@ const AdminSidebar = ({ userData }) => {
                     )}`}
                 >
                     <FaFolderOpen /> Category Management
+                </Link>
+
+                <Link
+                    to={userData?.role !== "user" ? "/admin/orders" : "#"}
+                    className={`flex items-center px-4 py-3 text-sm font-medium rounded-lg transition-colors gap-3 ${isActive(
+                        "/admin/orders"
+                    )}`}
+                >
+                    <FaFolderOpen /> Orders
                 </Link>
             </nav>
         </div>

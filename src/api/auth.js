@@ -1,15 +1,10 @@
 import API_URL from "./api";
 
 export const login = async (credentials) => {
-  try {
     if(!credentials.email || !credentials.password) throw new Error("Email and Password are required!");
     const res = await API_URL.post("/user/login", credentials);
     return res.data;
-  } catch (error) {
-    throw error || error.response?.data?.message || error.message || "Login failed";
-   
-  }
-};
+}
 
 export const signup = async (userData) => {
   try {

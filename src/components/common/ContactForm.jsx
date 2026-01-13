@@ -2,7 +2,7 @@ import React from "react";
 
 const ContactForm = () => {
     return (
-        <div className="border bg-white border-none shadow-lg col-span-3 p-10 space-y-7">
+        <div className="col-span-3 p-10 space-y-7">
             <div className="grid grid-cols-1 lg:grid-cols-3 sm:grid-cols-3 md:grid-cols-3 gap-8">
                 <input
                     type="text"

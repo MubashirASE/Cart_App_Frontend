@@ -110,7 +110,8 @@ const AdminCategory = () => {
   const flatCategories = flattenHierarchy(hierarchy);
 
   return (
-    <div className="min-h-screen py-8 px-8 bg-gray-50">
+    <div className="min-h-screen py-4 px-4 md:py-8 md:px-8 bg-gray-50">
+
       <PageHeader
         title="Category Management"
         subtitle="Manage product categories and hierarchies"

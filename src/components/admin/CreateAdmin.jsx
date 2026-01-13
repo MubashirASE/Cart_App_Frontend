@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { signup } from "../../api/auth";
 import { toast } from "react-toastify";
 import CreateAdminForm from "./CreateAdminForm.jsx";
 import { createAdmin } from "../../api/admin.js";

@@ -9,7 +9,8 @@ const Dashboard = () => {
     <div className="flex min-h-[calc(100vh-64px)] bg-gray-50 ">
       <AdminSidebar userData={userData} />
 
-      <div className="flex-1 overflow-auto p-8">
+      <div className="flex-1 overflow-auto p-4 md:p-8">
+
         <Outlet />
       </div>
     </div>

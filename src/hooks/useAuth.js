@@ -19,9 +19,17 @@ export const useAuth = () => {
     } else if (!/\S+@\S+\.\S+/.test(loginData.email)) {
       newErrors.email = "Email address is invalid";
     }
+    
     if (!loginData.password) {
       newErrors.password = "Password is required";
+    }else if (loginData.password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters long";
+    } else if (!/[A-Z]/.test(loginData.password)) {
+      newErrors.password = "Password must be at least 1 uppercase";
+    } else if (!/[!@#$%^&*(),?":;{}|<>]/.test(loginData.password)) {
+      newErrors.password = "Password must be at least 1 special character";
     }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -38,9 +46,15 @@ export const useAuth = () => {
     }
     if (!signupData.password) {
       newErrors.password = "Password is required";
-    } else if (signupData.password.length < 8) {
+    }else if (signupData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters long";
+    } else if (!/[A-Z]/.test(signupData.password)) {
+      newErrors.password = "Password must be at least 1 uppercase";
+    } else if (!/[!@#$%^&*(),?":;{}|<>]/.test(signupData.password)) {
+      newErrors.password = "Password must be at least 1 special character";
     }
+
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -51,6 +65,10 @@ export const useAuth = () => {
     try {
       const data = await login(loginData);
       if (data.success) {
+        if (data.userData?.isBlocked) {
+          toast.error("Your account has been blocked. Please contact support.");
+          return;
+        }
         setUser(data.token, data.userData);
         toast.success(data.message);
         navigate(data.userData.role === "user" ? "/" : "/admin");
@@ -58,7 +76,9 @@ export const useAuth = () => {
         toast.error(data.message);
       }
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
+      console.error("Login Error:", error);
+      const message = error.response?.data?.message || error.message || "Login failed";
+      toast.error(message);
     } finally {
       setLoading(false);
     }

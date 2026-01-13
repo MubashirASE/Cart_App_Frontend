@@ -16,12 +16,12 @@ const PaymentSummary = ({ cartItems }) => {
                         />
                         <div>
                             <p className="font-semibold">{item.productId.name}</p>
-                            <p>Price: ${item.productId.price}</p>
+                            <p>Price: Rs {item.productId.price}</p>
                             <p>Quantity: {item.quantity}</p>
                         </div>
                     </div>
                     <p className="mt-2 sm:mt-0 font-bold">
-                        Total: ${item.quantity * item.productId.price}
+                        Total: Rs {item.quantity * item.productId.price}
                     </p>
                 </div>
             ))}

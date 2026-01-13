@@ -12,7 +12,7 @@ createRoot(document.getElementById("root")).render(
   <QueryClientProvider client={queryClient}>
     <CartProvider>
       <App />
-      <ToastContainer position="top-right" autoClose={2000} />
+      <ToastContainer position="top-right" autoClose={2000} style={{ zIndex: 99999 }} />
     </CartProvider>
   </QueryClientProvider>
 );

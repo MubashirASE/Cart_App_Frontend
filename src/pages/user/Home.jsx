@@ -33,6 +33,7 @@ const HomeUI = () => {
     }
   };
 
+
   useEffect(() => {
     fetchProducts();
     fetchCartItems();
@@ -77,6 +78,7 @@ const HomeUI = () => {
 
   useEffect(() => {
     fetchCategories();
+
   }, []);
 
   const handleCategoryClick = (ele) => {
@@ -86,13 +88,13 @@ const HomeUI = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto sm:px-6 lg:px-8 py-8 px-6">
+    <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8 ">
       {loading ? (
         <div className="flex justify-center items-center h-64">
           <Loader size="lg" text="Loading products..." />
         </div>
       ) : (
-        <div className="max-w-7xl mx-auto px-6 py-8 space-y-12">
+        <div className="space-y-12">
           <HeroSection
             categories={categories}
             images={images}
@@ -123,6 +125,7 @@ const HomeUI = () => {
         </div>
       )}
     </div>
+
   );
 };
 

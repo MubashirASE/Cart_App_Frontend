@@ -102,7 +102,8 @@ const AllUserData = () => {
   };
 
   return (
-    <div className="p-8 space-y-6">
+    <div className="p-4 md:p-8 space-y-6">
+
       <PageHeader title="All User Details" />
 
       <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">

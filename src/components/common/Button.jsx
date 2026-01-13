@@ -9,7 +9,7 @@ const Button = ({
     type = "button",
     ...props
 }) => {
-    const baseStyles = "py-2 px-6 rounded-lg transition-colors font-medium focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
+    const baseStyles = "py-2 px-2 sm:px-4 rounded-lg transition-colors font-medium focus:outline-none disabled:opacity-50 disabled:cursor-not-allowed";
 
     const variants = {
         primary: "bg-blue-500 hover:bg-blue-600 text-white",

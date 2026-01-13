@@ -12,7 +12,7 @@ const AutoCarousel = ({ images, interval = 3000 }) => {
   }, [images.length, interval]);
 
   return (
-    <div className="relative w-full h-100 overflow-hidden rounded-lg">
+    <div className="relative w-full sm:h-96 lg:h-96 h-54 overflow-hidden rounded-lg sm:p-5">
       {images.map((img, index) => (
         <img
           key={index}

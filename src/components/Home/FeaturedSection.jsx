@@ -2,7 +2,7 @@ import SectionHeader from "../common/SectionHeader";
 
 const FeaturedSection = () => {
   return (
-    <div className="space-y-5 px-5">
+    <div className="space-y-5 sm:px-5">
       <SectionHeader title="Featured" />
 
       <div className="flex justify-between items-center w-full p-5">
@@ -10,7 +10,7 @@ const FeaturedSection = () => {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div className="bg-black rounded-lg overflow-hidden flex justify-center">
+        <div className="bg-black rounded-lg overflow-hidden flex justify-center ">
           <img src="bg3.png" alt="Featured 1" />
         </div>
 

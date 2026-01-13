@@ -6,7 +6,7 @@ const ProtectedRoute = ({ children, adminOnly = false, userOnly = false }) => {
   const user = userJson ? JSON.parse(userJson) : null;
   const location = useLocation();
 
-  if (!token) {
+  if (!token && (adminOnly || (!adminOnly && !userOnly))) {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 

@@ -22,6 +22,8 @@ import CartList from "../pages/user/CartList.jsx";
 import ContactPage from "../pages/user/Contact.jsx";
 import Products from "../pages/user/Products.jsx";
 import AdminProduct from "../pages/admin/AdminProduct.jsx";
+import AdminOrder from "../pages/admin/AdminOrder.jsx";
+import OrdersTracking from "../pages/user/OrderTracking.jsx";
 
 const router = createBrowserRouter([
     {
@@ -31,9 +33,9 @@ const router = createBrowserRouter([
             {
                 path: "/",
                 element: (
-                    <ProtectedRoute userOnly={true}>
+                    // <ProtectedRoute userOnly={true}>
                         <Home />
-                    </ProtectedRoute>
+                    // </ProtectedRoute>
                 ),
             },
             {
@@ -43,29 +45,38 @@ const router = createBrowserRouter([
             {
                 path: "cart",
                 element: (
-                    <ProtectedRoute userOnly={true}>
+                    // <ProtectedRoute userOnly={true}>
 
                         <CartList />
-                    </ProtectedRoute>
+                    // </ProtectedRoute>
+                ),
+            },
+             {
+                path: "orders",
+                element: (
+                    // <ProtectedRoute userOnly={true}>
+
+                        <OrdersTracking />
+                    // </ProtectedRoute>
                 ),
             },
             {
                 path: "payment-cart",
                 element: (
-                    <ProtectedRoute userOnly={true}>
-                        {" "}
+                    // <ProtectedRoute userOnly={true}>
+                        // {" "}
                         <PaymentCart />
-                    </ProtectedRoute>
+                    // </ProtectedRoute>
                 ),
             },
 
             {
                 path: "products",
                 element: (
-                    <ProtectedRoute userOnly={true}>
-                        {" "}
+                    // <ProtectedRoute userOnly={true}>
+                        // {" "}
                         <Products />
-                    </ProtectedRoute>
+                    // </ProtectedRoute>
                 ),
             },
             {
@@ -118,7 +129,7 @@ const router = createBrowserRouter([
                         element: <AdminHome />,
                     },
                     {
-                        path: "adminUser",
+                        path: "users",
                         element: <AllUserData />,
                     },
                     {
@@ -152,6 +163,10 @@ const router = createBrowserRouter([
                     {
                         path: "profile",
                         element: <ProfilePage />,
+                    },
+                    {
+                        path: "orders",
+                        element: <AdminOrder/>,
                     },
                 ],
             }

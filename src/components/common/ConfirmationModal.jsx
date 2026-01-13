@@ -1,7 +1,6 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Modal from "./popup";
 import Button from "./Button";
-
 const ConfirmationModal = ({
     open,
     onClose,
@@ -10,9 +9,22 @@ const ConfirmationModal = ({
     message = "Are you sure you want to delete this item?",
     itemName = "",
 }) => {
+    useEffect(() => {
+    if (open) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "auto";
+    }
+
+    return () => {
+      document.body.style.overflow = "auto";
+    };
+  }, [open]);
+
+  if (!open) return null;
     return (
-        <Modal open={open} onClose={onClose}>
-            <div className="p-4 text-center">
+        <Modal open={open} onClose={onClose} >
+            <div className="p-4 text-center ">
                 <h3 className="text-xl font-semibold text-gray-800 mb-2">{title}</h3>
                 <p className="text-gray-600 mb-6">
                     {message}
@@ -31,7 +43,7 @@ const ConfirmationModal = ({
                     </Button>
                     <Button
                         onClick={onConfirm}
-                        className="bg-red-600 text-white hover:bg-red-700"
+                        className="bg-blue-500 text-white hover:bg-blue-600"
                     >
                         Delete
                     </Button>

@@ -1,5 +1,6 @@
-import {  useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback } from "react";
 import API_URL from "../api/api.js";
+import { getOrderById } from "../api/orders.js";
 
 import { CartContext } from "./useCart";
 const userJson = localStorage.getItem("user")
@@ -13,7 +14,7 @@ export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
   const [cart, setCart] = useState();
   const [userData, setUserData] = useState(initialStates);
-
+  const [orders, setOrders] = useState([]);
   const setUser = useCallback((token, user) => {
     console.log(token, user)
     setUserData({
@@ -23,12 +24,13 @@ export const CartProvider = ({ children }) => {
     if (token) {
       localStorage.setItem("token", token)
       localStorage.setItem("user", JSON.stringify(user))
+
     } else {
       localStorage.removeItem("token")
       localStorage.removeItem("user")
     }
   }, []);
-
+  
   const logout = useCallback(() => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -48,7 +50,7 @@ export const CartProvider = ({ children }) => {
 
 
   const fetchCartItems = useCallback(async () => {
-    if (!userData?.token) return;
+    // Allowed without token now (guest mode)
     try {
       const res = await API_URL.get("/cart/");
       const cartData = res.data.cart;
@@ -63,16 +65,28 @@ export const CartProvider = ({ children }) => {
       console.error("Error fetching cart items:", error);
       setCartItems([]);
     }
-  }, [userData?.token]);
+  }, []);
+ 
+  const getOrders = async () => {
+  // const userId = userData?.user?._id;
+  const guestId = localStorage.getItem("guestId");
+  const user = localStorage.getItem("user");
+  const userId=user?.id || undefined
+  try {
+    const res = await getOrderById(userId, guestId);
+    setOrders(res.orders);
+    console.log("Orders:", res);
+    console.log("Orders:>>>>", orders)
+  } catch (err) {
+    console.error("Error fetching orders:", err);
+  }
+};
 
   useEffect(() => {
-    if (userData?.token) {
-      fetchCartItems();
-    } else {
-      setCartItems([]);
-    }
-  }, [userData?.token, fetchCartItems]);
-
+    fetchCartItems();
+    getOrders()
+  }, [fetchCartItems]);
+  
   useEffect(() => {
     fetchData()
   }, [fetchData]);
@@ -108,6 +122,8 @@ export const CartProvider = ({ children }) => {
         fetchCartItems,
         userData,
         setUser,
+        orders,
+        getOrders,
         logout
       }}
     >

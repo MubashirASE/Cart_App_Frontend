@@ -33,11 +33,11 @@ const ExploreProductsSection = ({
   const displayedProducts = showAll ? products : products?.slice(startIndex, endIndex);
 
   return (
-    <div className="space-y-3 px-5">
+    <div className="space-y-3 sm:px-5 ">
       <SectionHeader title="Our Product's" />
 
-      <div className="flex justify-between items-center">
-        <h2 className="text-3xl font-semibold">Explore Our Products</h2>
+      <div className="flex justify-between items-center p-2">
+        <h2 className="text-xl sm:text-3xl font-semibold">Explore Our Products</h2>
 
         <ScrollButtons
           onLeftClick={handlePrev}
@@ -47,7 +47,7 @@ const ExploreProductsSection = ({
         />
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 p-2">
         {displayedProducts?.map(ele => (
           <ProductCard
             key={ele._id}
@@ -60,7 +60,7 @@ const ExploreProductsSection = ({
       </div>
 
       <div className="w-full flex justify-center border-b border-gray-200 pb-11">
-        <Button onClick={() => setShowAll(!showAll)} className="px-12 py-4">
+        <Button onClick={() => setShowAll(!showAll)}>
           {showAll ? "Less Show All Products" : "View All Products"}
         </Button>
       </div>

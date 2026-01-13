@@ -1,5 +1,4 @@
 import API_URL from "./api";
-import { toast } from "react-toastify";
 
 export const removeFromCart = async (productId) => {
   try {
@@ -25,3 +24,11 @@ export const updateCartQuantity = async (productId, quantity) => {
   }
 };
 
+export const deleteCart = async (cartId) => {
+  try {
+    const res = await API_URL.delete(`/cart/deleteCart/${cartId}`);
+    return res.data;
+  } catch (error) {
+    throw error || error.response?.data?.message || "Failed to delete cart";
+  }
+};

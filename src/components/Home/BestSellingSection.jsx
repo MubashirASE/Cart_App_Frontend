@@ -13,18 +13,18 @@ const BestSellingSection = ({
   const displayedProducts = showAll ? products : products?.slice(0, 4);
 
   return (
-    <div className="space-y-5 px-5">
+    <div className="space-y-5 sm:p-5">
       <SectionHeader title="This Month" />
 
-      <div className="flex justify-between items-center w-full p-5">
-        <h2 className="text-3xl font-semibold">Best Selling Products</h2>
+      <div className="flex justify-between items-center w-full p-2 sm:p-5">
+        <h2 className="text-xl sm:text-3xl font-semibold">Best Selling Products</h2>
 
-        <Button onClick={() => setShowAll(!showAll)}>
+        <Button onClick={() => setShowAll(!showAll)} className="text-sm">
           {showAll ? "Less Show All Products" : "View All Products"}
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pb-10">
+      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2 sm:gap-6 pb-10 p-2">
         {displayedProducts?.map(ele => (
           <ProductCard
             key={ele._id}
@@ -34,6 +34,7 @@ const BestSellingSection = ({
           />
         ))}
       </div>
+
 
       <img src="/home2.png" className="rounded-lg w-full" alt="Banner" />
     </div>
